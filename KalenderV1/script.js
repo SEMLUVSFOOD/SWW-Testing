@@ -84,18 +84,8 @@ function renderCalendar(date) {
         if (isWeekend) {
             // Disable weekends
             div.style.backgroundColor = '#D3D3D3'; // Gray background
-            div.addEventListener('click', () => {
-                // Navigate to the previous or next month based on the day
-                if (currentDay.getDay() === 0) {
-                    // If Sunday, go to the next month
-                    currentDate.setMonth(currentDate.getMonth() + 1);
-                } else {
-                    // If Saturday, go to the previous month
-                    currentDate.setMonth(currentDate.getMonth() - 1);
-                }
-                renderCalendar(currentDate);
-            });
-        } else {
+            } 
+        else {
             // Set background color based on the occupation array or default to white if no data
             let occupationValue = null; // Default to null
 
