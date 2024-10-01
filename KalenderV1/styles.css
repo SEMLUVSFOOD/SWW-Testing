@@ -1,0 +1,102 @@
+body {
+    font-family: Arial, sans-serif;
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    margin: 10px;
+    background-color: #e5e5e5;
+}
+
+/* General calendar container */
+.calendar-container {
+  padding: 20px;
+  background-color: #ffffff;
+  border-radius: 6px;
+}
+
+/* Month and Year display */
+.calendar-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.month-selection {
+    width: 70%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+button {
+  background-color: #6658A2;
+  color: rgb(255, 255, 255);
+  border: none;
+  padding: 10px;
+  border-radius: 5px;
+  font-size: 16px;
+  cursor: pointer;
+}
+
+button:disabled {
+  background-color: #cccccc;
+}
+
+#month-year {
+  font-size: 1rem;
+  text-align: center;
+}
+
+/* Grid structure for the days */
+.dates-grid {
+  display: flex;
+  margin-top: 10px;
+  flex-direction: row;
+  flex-wrap: wrap ;
+  justify-content: space-between;
+
+}
+
+.days-grid {
+    display: flex;
+    width: 100%;
+    flex-direction: row;
+    justify-content: space-between; 
+    margin-top: 20px;
+}
+
+.day {
+    width: 13.285%;
+    text-align: center;
+}
+
+/* Each date (number) in the calendar */
+.dates-grid div {
+    width: 13.285%;
+    aspect-ratio: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border: 1px solid #ddd;
+    border-radius: 6px;
+    font-size: 16px;
+    font-weight: bold;
+}
+
+/* Disabled dates for previous or next month */
+.dates-grid .disabled {
+  color: #ccc;
+}
+
+/* Highlight the current day */
+.dates-grid .today {
+  background-color: #6658A2;
+  text-decoration: underline;
+  font-weight: 900;
+  border: 2px solid #000000;
+}
+
+
+.break {
+    height: 2vh;
+}

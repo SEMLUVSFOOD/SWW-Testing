@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Interactive Calendar</title>
+    <link rel="stylesheet" href="styles.css">
+    <script defer src="script.js"></script>
+</head>
+<body>
+    <div class="calendar-container">
+        <div class="calendar-header">
+            <div class="month-selection">
+                <button id="prev-month">&lt;</button>
+                <span id="month-year"></span>
+                <button id="next-month">&gt;</button>
+            </div>
+            <button onclick="goToCurrentMonth()">Vandaag</button>
+        </div>
+        <div class="calendar-grid">
+            <div class="days-grid">
+                <div class="day">Sun</div>
+                <div class="day">Mon</div>
+                <div class="day">Tue</div>
+                <div class="day">Wed</div>
+                <div class="day">Thu</div>
+                <div class="day">Fri</div>
+                <div class="day">Sat</div>
+            </div>
+            <div id="dates" class="dates-grid"></div>
+        </div>
+    </div>
+
+    <div class="break"></div>
+
+    <div class="calendar-container">
+  
+    </div>
+</body>
+</html>
