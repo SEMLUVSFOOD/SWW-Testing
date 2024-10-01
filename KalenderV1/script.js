@@ -26,7 +26,6 @@ const occupationData = {
 const colorFull = "#E54F37";   // Red for full occupancy
 const colorNone = "#008663";    // Green for no occupancy
 const colorPartial = "#F7C53A"; // Yellow for partial occupancy
-const colorEmpty = "#008663";    // Green for months with no data
 
 function renderCalendar(date) {
     const year = date.getFullYear();
@@ -84,7 +83,7 @@ function renderCalendar(date) {
         if (isWeekend) {
             // Disable weekends
             div.style.backgroundColor = '#D3D3D3'; // Gray background
-            } 
+        } 
         else {
             // Set background color based on the occupation array or default to white if no data
             let occupationValue = null; // Default to null
@@ -92,16 +91,14 @@ function renderCalendar(date) {
             if (occupationArray) {
                 occupationValue = occupationArray[day - 1]; // Access the occupation value for the day
             }
-
+            
             // Apply colors based on occupancy
-            if (occupationValue === 0) {
-                div.style.backgroundColor = colorNone; // No occupancy
-            } else if (occupationValue >= 1 && occupationValue <= 9) {
+            if (occupationValue >= 1 && occupationValue <= 9) {
                 div.style.backgroundColor = colorPartial; // Partial occupancy
             } else if (occupationValue === 10) {
-                div.style.backgroundColor = colorFull; // Full occupancy
+                div.style.backgroundColor = colorFull; // Full occupancyelse if {
             } else {
-                div.style.backgroundColor = colorEmpty; // No data for this month
+                div.style.backgroundColor = colorNone; // No data for this month
             }
 
             // Highlight the current day
