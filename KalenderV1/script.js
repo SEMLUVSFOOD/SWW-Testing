@@ -13,6 +13,12 @@ const occupationData = {
         Oktober: [0, 0, 3, 7, 1, 4, 6, 10, 9, 0, 3, 7, 1, 4, 2, 1, 0, 0, 0, 0, 2, 6, 8, 10, 9, 3, 2, 1, 0, 0],
         November: [1], // No data for November, will render white boxes
         // Add more months as needed
+    },
+    "2025": {
+        September: [10, 4, 6, 2, 9, 8, 10, 0, 3, 7, 1, 4, 6, 2, 9, 8, 10, 0, 3, 7, 1, 4, 6, 2, 9, 8, 10, 0, 3, 7],
+        Oktober: [0, 0, 3, 7, 1, 4, 6, 10, 9, 0, 3, 7, 1, 4, 2, 1, 0, 0, 0, 0, 2, 6, 8, 10, 9, 3, 2, 1, 0, 0],
+        November: [1], // No data for November, will render white boxes
+        // Add more months as needed
     }
 };
 
