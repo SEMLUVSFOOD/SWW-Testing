@@ -108,10 +108,17 @@ function renderCalendar(date) {
     }
 }
 
-function changeMonth(offset) {
-    currentDate.setMonth(currentDate.getMonth() + offset);
-    renderCalendar(currentDate);
+function changeMonth(offset) {  
+    const isLimitReached = limitReachedChecker();
+    if (!isLimitReached) {
+        currentDate.setMonth(currentDate.getMonth() + offset);
+        renderCalendar(currentDate);
+    }
+    else {
+        alert("Dit stuk van de kalender is helaas dicht");
+    }
 }
+
 
 function goToCurrentMonth() {
     currentDate = new Date();
@@ -124,3 +131,24 @@ fetchOccupationData();
 // Event listeners for navigation buttons
 prevMonthButton.addEventListener('click', () => changeMonth(-1));
 nextMonthButton.addEventListener('click', () => changeMonth(1));
+
+
+function limitReachedChecker() {
+    const newDate = new Date(); // Create a new date object based on the current date
+    
+    // Calculate the date limits based on the current date
+    const sixMonthsAgo = new Date(); 
+    sixMonthsAgo.setMonth(newDate.getMonth() - 6); // Six months ago from current date
+    const sixMonthsFromNow = new Date(); 
+    sixMonthsFromNow.setMonth(newDate.getMonth() + 6); // Six months from current date
+
+    // Initialize the isLimitReached variable
+    let isLimitReached = false; // Set the default value
+
+    // Check if the new date is within the allowed range
+    if (currentDate < sixMonthsAgo || currentDate > sixMonthsFromNow) {
+        isLimitReached = true;
+    }
+
+    return isLimitReached;
+}
