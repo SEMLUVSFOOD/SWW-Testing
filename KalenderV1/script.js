@@ -5,103 +5,85 @@ const nextMonthButton = document.getElementById('next-month');
 const currentMonthButton = document.getElementById('current-month');
 
 let currentDate = new Date();
-
-// Occupation arrays for each month of the year 2024
-const occupationData = {
-    "2024": {
-        September: [10, 4, 6, 2, 9, 8, 10, 0, 3, 7, 1, 4, 6, 2, 9, 8, 10, 0, 3, 7, 1, 4, 6, 2, 9, 8, 10, 0, 3, 7],
-        Oktober: [0, 0, 3, 7, 1, 4, 6, 10, 9, 0, 3, 7, 1, 4, 2, 1, 0, 0, 0, 0, 2, 6, 8, 10, 9, 3, 2, 1, 0, 0],
-        November: [1], // No data for November, will render white boxes
-        // Add more months as needed
-    },
-    "2025": {
-        September: [10, 4, 6, 2, 9, 8, 10, 0, 3, 7, 1, 4, 6, 2, 9, 8, 10, 0, 3, 7, 1, 4, 6, 2, 9, 8, 10, 0, 3, 7],
-        Oktober: [0, 0, 3, 7, 1, 4, 6, 10, 9, 0, 3, 7, 1, 4, 2, 1, 0, 0, 0, 0, 2, 6, 8, 10, 9, 3, 2, 1, 0, 0],
-        November: [1], // No data for November, will render white boxes
-        // Add more months as needed
-    }
-};
+let occupationData = {};  // Now empty, data will be fetched dynamically
 
 // Define the three colors
 const colorFull = "#E54F37";   // Red for full occupancy
 const colorNone = "#008663";    // Green for no occupancy
 const colorPartial = "#F7C53A"; // Yellow for partial occupancy
+const colorUnavailable = "#D3D3D3"; // Gray for weekends and other unavailable days
+
+// Function to fetch the JSON data
+async function fetchOccupationData() {
+    try {
+        const response = await fetch('occupationData.json'); // Get the date, await makes it so it pauses everthing untill data is loaded
+        if (!response.ok) {
+            throw new Error('Failed to load JSON data');
+        }
+        occupationData = await response.json();
+        renderCalendar(currentDate); // Call renderCalendar after fetching data
+    } catch (error) {
+        console.error('Error loading occupation data:', error);
+    }
+}
 
 function renderCalendar(date) {
     const year = date.getFullYear();
     const month = date.getMonth();
     const monthNames = ["Januari", "Februari", "Maart", "April", "Mei", "Juni", 
-                        "Juli", "Augustus", "September", "Oktober", "November", "December"];
+                        "Juli", "Augustus", "September", "Oktober", "November", "December"]; // Array used in combination with the month const
     
-    // Get first and last day of the month
     const firstDay = new Date(year, month, 1);
-    const lastDay = new Date(year, month + 1, 0);
+    const lastDay = new Date(year, month + 1, 0); // The +1 to go to next month, 0 to select the 0th day of that month basically meaning last day of last month
+    const firstDayIndex = firstDay.getDay(); //Check what day the first day is, sunday would be 0, monday 1 etc.
+    const lastDate = lastDay.getDate(); // Get the amount of days in the currently displaying month
+    const prevLastDay = new Date(year, month, 0).getDate(); // Last day of Previous Month to fill in the grayed out areas
 
-    // First day of the current month (0 = Sunday, 1 = Monday, etc.)
-    const firstDayIndex = firstDay.getDay();
-    
-    // Total number of days in the current month
-    const lastDate = lastDay.getDate();
-
-    // Get the last day of the previous month
-    const prevLastDay = new Date(year, month, 0).getDate();
-
-    // Update the month and year display
     monthYearElement.innerText = `${monthNames[month]} ${year}`;
-
-    // Clear the grid before appending new dates
     datesGrid.innerHTML = '';
 
-    // Add the last few days of the previous month (disabled)
+    // Add the last few days of the previous month, it starts with generating the first block. That's the formula with the !!!!
     for (let x = firstDayIndex; x > 0; x--) {
-        const div = document.createElement('div');
-        div.classList.add('disabled');
-        div.innerText = prevLastDay - x + 1;
-
-        // Add event listener to go to the previous month
+        const div = document.createElement('div'); // 1. Create a new <div> element for each day
+        div.classList.add('disabled'); // 2. Add a 'disabled' class to these days (to style them differently from the current month)
+        div.innerText = prevLastDay - x + 1; // 3. Calculate and display the correct day number from the previous month !!!!!
+        
+        // 4. Add an event listener that, when clicked, will switch to the previous month
         div.addEventListener('click', () => {
-            currentDate.setMonth(currentDate.getMonth() - 1);
-            renderCalendar(currentDate);
+            currentDate.setMonth(currentDate.getMonth() - 1); // Move to the previous month
+            renderCalendar(currentDate); // Re-render the calendar for the new month
         });
 
+        // 5. Append the newly created div to the grid of dates in the calendar
         datesGrid.appendChild(div);
     }
+
 
     // Get the occupation array for the current month
     const monthName = monthNames[month];
     const occupationArray = occupationData[year] ? occupationData[year][monthName] : null;
 
-    // Add all the days of the current month with IDs and colors
+    // Add all the days of the current month
     for (let day = 1; day <= lastDate; day++) {
         const div = document.createElement('div');
-        const currentDay = new Date(year, month, day); // Get the current day object
         div.innerText = day;
 
-        // Check if it's a weekend (Saturday or Sunday)
-        const isWeekend = currentDay.getDay() === 0 || currentDay.getDay() === 6; // Sunday (0) or Saturday (6)
-        
-        if (isWeekend) {
-            // Disable weekends
-            div.style.backgroundColor = '#D3D3D3'; // Gray background
-        } 
-        else {
-            // Set background color based on the occupation array or default to white if no data
-            let occupationValue = null; // Default to null
+        const currentDay = new Date(year, month, day);
+        const isWeekend = currentDay.getDay() === 0 || currentDay.getDay() === 6;
 
-            if (occupationArray) {
-                occupationValue = occupationArray[day - 1]; // Access the occupation value for the day
-            }
-            
-            // Apply colors based on occupancy
+        if (isWeekend) {
+            div.style.backgroundColor = colorUnavailable;
+        } else {
+            let occupationValue = occupationArray ? occupationArray[day - 1] : null;
+
             if (occupationValue >= 1 && occupationValue <= 9) {
                 div.style.backgroundColor = colorPartial; // Partial occupancy
             } else if (occupationValue === 10) {
-                div.style.backgroundColor = colorFull; // Full occupancyelse if {
+                div.style.backgroundColor = colorFull; // Full occupancy
             } else {
-                div.style.backgroundColor = colorNone; // No data for this month
+                div.style.backgroundColor = colorNone; // No data
             }
 
-            // Highlight the current day
             if (day === new Date().getDate() && month === new Date().getMonth() && year === new Date().getFullYear()) {
                 div.classList.add('today');
             }
@@ -110,20 +92,17 @@ function renderCalendar(date) {
         datesGrid.appendChild(div);
     }
 
-    // Fill the rest of the grid with the first days of the next month (disabled)
+    // Fill the rest of the grid with next month's days
     const nextDays = 7 - ((firstDayIndex + lastDate) % 7);
     if (nextDays < 7) {
         for (let i = 1; i <= nextDays; i++) {
             const div = document.createElement('div');
             div.classList.add('disabled');
             div.innerText = i;
-
-            // Add event listener to go to the next month
             div.addEventListener('click', () => {
                 currentDate.setMonth(currentDate.getMonth() + 1);
                 renderCalendar(currentDate);
             });
-
             datesGrid.appendChild(div);
         }
     }
@@ -135,12 +114,12 @@ function changeMonth(offset) {
 }
 
 function goToCurrentMonth() {
-    currentDate = new Date(); // Reset to current date
+    currentDate = new Date();
     renderCalendar(currentDate);
 }
 
-// Initialize the calendar
-renderCalendar(currentDate);
+// Fetch data and initialize the calendar
+fetchOccupationData();
 
 // Event listeners for navigation buttons
 prevMonthButton.addEventListener('click', () => changeMonth(-1));
