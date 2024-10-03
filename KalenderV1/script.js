@@ -109,7 +109,7 @@ function renderCalendar(date) {
 }
 
 function changeMonth(offset) {  
-    const isLimitReached = limitReachedChecker();
+    const isLimitReached = canChangeMonthChecker(offset);
     if (!isLimitReached) {
         currentDate.setMonth(currentDate.getMonth() + offset);
         renderCalendar(currentDate);
@@ -130,7 +130,7 @@ prevMonthButton.addEventListener('click', () => changeMonth(-1));
 nextMonthButton.addEventListener('click', () => changeMonth(1));
 
 
-function limitReachedChecker() {
+function canChangeMonthChecker(offset) {
     const newDate = new Date(); // Create a new date object based on the current date
     
     // Calculate the date limits based on the current date
@@ -143,11 +143,11 @@ function limitReachedChecker() {
     let isLimitReached = false; // Set the default value
 
     // Check if the new date is within the allowed range
-    if (currentDate < sixMonthsAgo) {
+    if (currentDate < sixMonthsAgo && offset === -1) {
         isLimitReached = true;
         alert("Verder terug kan helaas niet");
     }
-    else if (currentDate > sixMonthsFromNow) {
+    else if (currentDate > sixMonthsFromNow && offset === 1) {
         isLimitReached = true;
         alert("Verder dan 6 maanden in de toekomst kan je niet boeken");
     }
