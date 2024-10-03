@@ -54,7 +54,10 @@ button:disabled {
   flex-direction: row;
   flex-wrap: wrap ;
   justify-content: space-between;
+}
 
+.dates-grid div {
+  margin-top: .3125rem;
 }
 
 .days-grid {
