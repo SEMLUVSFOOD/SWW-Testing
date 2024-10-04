@@ -109,15 +109,41 @@ function renderCalendar(date) {
 }
 
 function changeMonth(offset) {  
-    const isLimitReached = canChangeMonthChecker(offset);
-    if (!isLimitReached) {
-        currentDate.setMonth(currentDate.getMonth() + offset);
-        renderCalendar(currentDate);
-    }
+    currentDate.setMonth(currentDate.getMonth() + offset);
+
+
+
+    const newDate = new Date(); // Create a new date object based on the current date
+    
+    // Calculate the date limits based on the current date
+    const MonthsAgo = new Date(); 
+    MonthsAgo.setMonth(newDate.getMonth() - 1); // x months ago from current date
+    const MonthsFromNow = new Date(); 
+    MonthsFromNow.setMonth(newDate.getMonth() + 6); // x months from current date
+
+    const currentMonth = currentDate.getMonth() + 1;
+    const pastMonth = MonthsAgo.getMonth() + 1;
+    const futureMonth = MonthsFromNow.getMonth();
+
+    console.log("current=" + currentMonth + " past=" + pastMonth + " future=" + futureMonth);
+
+    resetButtons();
+
+    if (currentMonth === pastMonth) {
+        prevMonthButton.setAttribute('id', 'disabled');
+        prevMonthButton.style.background = colorUnavailable;
+    } 
+    else if (currentMonth === futureMonth) {
+        nextMonthButton.setAttribute('id', 'disabled');
+        nextMonthButton.style.background = colorUnavailable;
+    } 
+
+    renderCalendar(currentDate);
+
 }
 
-
 function goToCurrentMonth() {
+    resetButtons();
     currentDate = new Date();
     renderCalendar(currentDate);
 }
@@ -129,28 +155,10 @@ fetchOccupationData();
 prevMonthButton.addEventListener('click', () => changeMonth(-1));
 nextMonthButton.addEventListener('click', () => changeMonth(1));
 
+function resetButtons() {
+    prevMonthButton.style.background = "#6658A2";
+    nextMonthButton.style.background = "#6658A2";
 
-function canChangeMonthChecker(offset) {
-    const newDate = new Date(); // Create a new date object based on the current date
-    
-    // Calculate the date limits based on the current date
-    const sixMonthsAgo = new Date(); 
-    sixMonthsAgo.setMonth(newDate.getMonth() - 1); // Six months ago from current date
-    const sixMonthsFromNow = new Date(); 
-    sixMonthsFromNow.setMonth(newDate.getMonth() + 6); // Six months from current date
-
-    // Initialize the isLimitReached variable
-    let isLimitReached = false; // Set the default value
-
-    // Check if the new date is within the allowed range
-    if (currentDate < sixMonthsAgo && offset === -1) {
-        isLimitReached = true;
-        alert("Verder terug kan helaas niet");
-    }
-    else if (currentDate > sixMonthsFromNow && offset === 1) {
-        isLimitReached = true;
-        alert("Verder dan 6 maanden in de toekomst kan je niet boeken");
-    }
-
-    return isLimitReached;
+    prevMonthButton.setAttribute('id', 'enabled');
+    nextMonthButton.setAttribute('id', 'enabled');
 }

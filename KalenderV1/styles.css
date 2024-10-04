@@ -42,6 +42,10 @@ button:disabled {
   background-color: #cccccc;
 }
 
+#disabled {
+  pointer-events: none;
+}
+
 #month-year {
   font-size: 1rem;
   text-align: center;
