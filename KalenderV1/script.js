@@ -33,6 +33,7 @@ function renderCalendar(date) {
     const monthNames = ["Januari", "Februari", "Maart", "April", "Mei", "Juni", 
                         "Juli", "Augustus", "September", "Oktober", "November", "December"]; // Array used in combination with the month const
     
+
     const firstDay = new Date(year, month, 1);
     const lastDay = new Date(year, month + 1, 0); // The +1 to go to next month, 0 to select the 0th day of that month basically meaning last day of last month
     const firstDayIndex = firstDay.getDay(); //Check what day the first day is, sunday would be 0, monday 1 etc.
@@ -106,16 +107,39 @@ function renderCalendar(date) {
             datesGrid.appendChild(div);
         }
     }
+
+    checkMonthLimits();
 }
 
 function changeMonth(offset) {  
     currentDate.setMonth(currentDate.getMonth() + offset);
+    checkMonthLimits(); // Call the separate function to handle month limits
+    renderCalendar(currentDate); // Re-render the calendar after changing the month
+}
 
-    const howFarinPast = -1;
+
+function goToCurrentMonth() {
+    resetButtons();
+    currentDate = new Date();
+    renderCalendar(currentDate);
+}
+
+// Fetch data and initialize the calendar
+fetchOccupationData();
+
+// Event listeners for navigation buttons
+prevMonthButton.addEventListener('click', () => changeMonth(-1));
+nextMonthButton.addEventListener('click', () => changeMonth(1));
+
+
+
+
+function checkMonthLimits() {
+    const howFarinPast = 0;
     const howFarinFuture = 6;
 
     const newDate = new Date(); // Create a new date object based on the current date
-    
+
     // Calculate the date limits based on the current date
     const MonthsAgo = new Date(); 
     MonthsAgo.setMonth(newDate.getMonth() + howFarinPast); // x months ago from current date
@@ -137,24 +161,9 @@ function changeMonth(offset) {
     else if (currentMonth === futureMonth) {
         nextMonthButton.setAttribute('id', 'disabled');
         nextMonthButton.style.background = colorUnavailable;
-    } 
-
-    renderCalendar(currentDate);
-
+    }
 }
 
-function goToCurrentMonth() {
-    resetButtons();
-    currentDate = new Date();
-    renderCalendar(currentDate);
-}
-
-// Fetch data and initialize the calendar
-fetchOccupationData();
-
-// Event listeners for navigation buttons
-prevMonthButton.addEventListener('click', () => changeMonth(-1));
-nextMonthButton.addEventListener('click', () => changeMonth(1));
 
 function resetButtons() {
     prevMonthButton.style.background = "#6658A2";
