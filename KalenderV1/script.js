@@ -111,19 +111,20 @@ function renderCalendar(date) {
 function changeMonth(offset) {  
     currentDate.setMonth(currentDate.getMonth() + offset);
 
-
+    const howFarinPast = -1;
+    const howFarinFuture = 6;
 
     const newDate = new Date(); // Create a new date object based on the current date
     
     // Calculate the date limits based on the current date
     const MonthsAgo = new Date(); 
-    MonthsAgo.setMonth(newDate.getMonth() - 1); // x months ago from current date
+    MonthsAgo.setMonth(newDate.getMonth() + howFarinPast); // x months ago from current date
     const MonthsFromNow = new Date(); 
-    MonthsFromNow.setMonth(newDate.getMonth() + 6); // x months from current date
+    MonthsFromNow.setMonth(newDate.getMonth() + howFarinFuture); // x months from current date
 
     const currentMonth = currentDate.getMonth() + 1;
     const pastMonth = MonthsAgo.getMonth() + 1;
-    const futureMonth = MonthsFromNow.getMonth();
+    const futureMonth = MonthsFromNow.getMonth() + 1;
 
     console.log("current=" + currentMonth + " past=" + pastMonth + " future=" + futureMonth);
 
