@@ -1,3 +1,13 @@
+@font-face {
+    font-family: 'Titling Gothic FB Narrow Medium';  /* Your custom font name */
+    src: url('./Titling\ Gothic\ FB\ Narrow\ Medium.otf') format('opentype');  /* Path to your .otf file */
+    font-weight: normal;  /* You can set to normal, bold, etc. */
+    font-style: normal;   /* You can set to normal, italic, etc. */
+  }
+  * {
+    font-family: 'Titling Gothic FB Narrow Medium', sans-serif; /* Use your custom font with fallbacks */
+  }
+
 body {
     font-family: Arial, sans-serif;
     display: flex;

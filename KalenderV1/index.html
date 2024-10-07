@@ -11,40 +11,66 @@
     <a class="backbutton" href="../index.html"> 
         Terug naar selectie
     </a>
-
-    <div class="calendar-container">
-        <div class="calendar-header">
-            <div class="month-selection">
-                <button id="prev-month">&lt;</button>
-                <span id="month-year"></span>
-                <button id="next-month">&gt;</button>
+    <div class="topsection">
+        <div class="calendar-container">
+            <div class="calendar-header">
+                <div class="month-selection">
+                    <button id="prev-month">&lt;</button>
+                    <span id="month-year"></span>
+                    <button id="next-month">&gt;</button>
+                </div>
+                <button onclick="goToCurrentMonth()">Vandaag</button>
             </div>
-            <button onclick="goToCurrentMonth()">Vandaag</button>
+            <div class="calendar-grid">
+                <div class="days-grid">
+                    <div class="day">Sun</div>
+                    <div class="day">Mon</div>
+                    <div class="day">Tue</div>
+                    <div class="day">Wed</div>
+                    <div class="day">Thu</div>
+                    <div class="day">Fri</div>
+                    <div class="day">Sat</div>
+                </div>
+                <div id="dates" class="dates-grid"></div>
+            </div>
+            <div class="colour-meaning">
+                <div class="colourblock">
+                    <div class="colour" id="green"> </div>
+                    <p> Volledig vrij </p>
+                </div>
+                <div class="colourblock">
+                    <div class="colour" id="yellow">
+                    </div>
+                    <p> 1-9 plekken vrij </p>
+                </div>
+                <div class="colourblock">
+                    <div class="colour" id="red">
+                    </div>
+                    <p> Volledig bezet </p>
+                </div>
+            </div>
         </div>
-        <div class="calendar-grid">
-            <div class="days-grid">
-                <div class="day">Sun</div>
-                <div class="day">Mon</div>
-                <div class="day">Tue</div>
-                <div class="day">Wed</div>
-                <div class="day">Thu</div>
-                <div class="day">Fri</div>
-                <div class="day">Sat</div>
+
+        <div class="time-selection-grid">
+            <div class="timeselection">
+                <div class="blockselection morning"> 
+                    <p id="morning"> </p>
+                    <p class="daypart"> Ochtend </p>
+                    <p> 9.00 - 13.00 </p>
+                </div>
+                <div class="blockselection afternoon"> 
+                    <p id="afternoon"> </p>
+                    <p class="daypart"> Middag </p>
+                    <p> 13.00 - 17.00 </p>
+                </div>
+                <div class="blockselection wholeday"> 
+                    <p id="wholeday"> </p>
+                    <p class="daypart"> Hele Dag</p>
+                    <p> 9.00 - 17.00 </p>
+                </div>
             </div>
-            <div id="dates" class="dates-grid"></div>
         </div>
     </div>
-
-    <div class="time-selection-grid">
-        <p>Kies een tijdslot:</p>
-        <div class="timeselection">
-            <p id="selected-date"> </p>
-            <p id="morning"> </p>
-            <p id="afternoon"> </p>
-            <p id="wholeDay"> </p>
-        </div>
-    </div>
-
     <div class="break"></div>
 
 

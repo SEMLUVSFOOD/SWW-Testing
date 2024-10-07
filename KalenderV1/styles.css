@@ -1,3 +1,13 @@
+@font-face {
+  font-family: 'Titling Gothic FB Narrow Medium';  /* Your custom font name */
+  src: url('../Titling\ Gothic\ FB\ Narrow\ Medium.otf') format('opentype');  /* Path to your .otf file */
+  font-weight: normal;  /* You can set to normal, bold, etc. */
+  font-style: normal;   /* You can set to normal, italic, etc. */
+}
+* {
+  font-family: 'Titling Gothic FB Narrow Medium', sans-serif; /* Use your custom font with fallbacks */
+}
+
 body {
     font-family: Arial, sans-serif;
     display: flex;
@@ -5,6 +15,16 @@ body {
     flex-direction: column;
     margin: 10px;
     background-color: #e5e5e5;
+}
+h2 {
+  margin: 0;
+}
+
+.topsection {
+  display: flex;
+  justify-content: space-between;
+  flex-direction: column;
+  width: 100%;
 }
 
 /* General calendar container */
@@ -104,12 +124,49 @@ button:disabled {
 
 
 
+/* Colour the legenda */
+
+.colour-meaning {
+  display: flex;
+  justify-content: space-between;
+}
+
+.colourblock {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: .625rem;
+}
+
+.colour {
+  border-radius: 6px;
+  width: 25px;
+  height: 25px;
+}
+
+#green {
+  background-color: #008663;
+}
+#yellow {
+  background-color: #F7C53A;
+}
+#red {
+  background-color: #E54F37;
+}
+
 
 
 /* SIZING FOR DESKTOP */
 @media only screen and (min-width: 800px) {
   .calendar-container {
-    width: 40%;
+    width: 45%;
+  }
+  .topsection {
+    flex-direction: row;
+  }
+  .time-selection-grid {
+    margin-top: 0px !important;
+    width: 45%;
   }
 }
 
@@ -151,10 +208,42 @@ button:disabled {
 
 .time-selection-grid {
   color: #000000;
-  background-color: aqua;
-  /* display: none; */
   padding: 20px;
   background-color: #ffffff;
   border-radius: 6px;
   margin-top: 20px;
+  height: 100%;
+}
+
+.timeselection {
+  display: flex;
+  justify-content: space-around;
+  border: #000000 .0625rem solid;
+  border-radius: 6px;
+}
+
+.blockselection {
+  width: 33%;
+  padding: 10px;
+}
+
+/* Add borders between morning, afternoon, and whole day */
+.timeselection p {
+  text-align: center;
+  margin: 5px;
+}
+
+/* Add vertical line between morning and afternoon */
+.morning {
+  border-right: 1px solid #000000;
+}
+
+/* Add vertical line between afternoon and whole day */
+.afternoon {
+  border-right: 1px solid #000000;
+}
+
+
+.daypart {
+  color: #008663;
 }

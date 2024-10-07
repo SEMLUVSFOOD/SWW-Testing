@@ -216,8 +216,8 @@ async function dateClicked(event) {
     const selectedMonth = currentDate.getMonth() + 1;
     const selectedDay = event.target.innerHTML;
 
-    const selectedDate = document.getElementById('selected-date');
-    selectedDate.innerHTML = "Datum geselecteerd:" + selectedDay + "-" + selectedMonth;
+    // const selectedDate = document.getElementById('selected-date');
+    // selectedDate.innerHTML = "Kies een tijdslot (" + selectedDay + "-" + selectedMonth + " geselecteerd):";
 
     // Fetch the data using the separate function
     const data = await getOccupationDataMonth(selectedMonth);
@@ -228,15 +228,15 @@ async function dateClicked(event) {
 
     const morning = document.getElementById('morning');
     const afternoon = document.getElementById('afternoon');
-    const wholeDay = document.getElementById('wholeDay');
+    const wholeDay = document.getElementById('wholeday');
 
     morningOccupation = data[selectedDay]["0"][0];
     afternoonOccupation = data[selectedDay]["1"][0];
     wholeDayOccupation = morningOccupation + afternoonOccupation;
 
-    morning.innerHTML = "Ochtend bezet: " + morningOccupation + "/5"
-    afternoon.innerHTML = "Middag bezet: " + afternoonOccupation + "/5"
-    wholeDay.innerHTML = "Hele Dag bezet: " + wholeDayOccupation + "/10"
+    morning.innerHTML = morningOccupation + "/5 bezet"
+    afternoon.innerHTML = afternoonOccupation + "/5 bezet"
+    wholeDay.innerHTML = wholeDayOccupation + "/10 bezet"
 
 
 }
@@ -275,19 +275,19 @@ async function resetTimeSelection(event) {
     const currentDay = newDate.getDate();
     const currentMonth = newDate.getMonth() + 1;
 
-    const selectedDate = document.getElementById('selected-date');
-    selectedDate.innerHTML = "Datum geselecteerd:" + currentDay + "-" + currentMonth;
+    // const selectedDate = document.getElementById('selected-date');
+    // selectedDate.innerHTML = "Kies een tijdslot (" + currentDay + "-" + currentMonth + " geselecteerd):";
 
     const morning = document.getElementById('morning');
     const afternoon = document.getElementById('afternoon');
-    const wholeDay = document.getElementById('wholeDay');
+    const wholeDay = document.getElementById('wholeday');
 
     morningOccupation = data[currentDay]["0"][0];
     afternoonOccupation = data[currentDay]["1"][0];
     wholeDayOccupation = morningOccupation + afternoonOccupation;
 
-    morning.innerHTML = "Ochtend bezet: " + morningOccupation + "/5"
-    afternoon.innerHTML = "Middag bezet: " + afternoonOccupation + "/5"
-    wholeDay.innerHTML = "Hele Dag bezet: " + wholeDayOccupation + "/10"
+    morning.innerHTML =  morningOccupation + "/5 bezet"
+    afternoon.innerHTML = afternoonOccupation + "/5 bezet"
+    wholeDay.innerHTML = wholeDayOccupation + "/10 bezet"
 
 }
