@@ -96,8 +96,7 @@ button:disabled {
 }
 
 /* Highlight the current day */
-.dates-grid .today {
-  background-color: #6658A2;
+.dates-grid .selected {
   text-decoration: underline;
   font-weight: 900;
   border: 2px solid #000000;
@@ -138,3 +137,33 @@ button:disabled {
 
 
 
+
+
+
+
+
+
+
+/* START OF MAKING THE TIME SELECTION */
+#ableToPress {
+  cursor: pointer;
+}
+
+.time-selection-grid {
+  color: #000000;
+  background-color: aqua;
+  /* display: none; */
+  padding: 20px;
+  background-color: #ffffff;
+  border-radius: 6px;
+  margin-top: 20px;
+}
+
+.placeholder-timeselection {
+  color: red;
+}
+
+
+#invisible {
+  display: none;  
+}

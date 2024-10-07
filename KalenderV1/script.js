@@ -61,20 +61,28 @@ function renderCalendar(date) {
 
 
     // Get the occupation array for the current month
-    const monthName = monthNames[month];
-    const occupationArray = occupationData[year] ? occupationData[year][monthName] : null;
+    const occupationArray = occupationData[year] ? occupationData[year][month + 1] : null;
 
     // Add all the days of the current month
     for (let day = 1; day <= lastDate; day++) {
         const div = document.createElement('div');
         div.innerText = day;
 
+        // Get the necessery variables to make past days and weekends gray
         const currentDay = new Date(year, month, day);
         const isWeekend = currentDay.getDay() === 0 || currentDay.getDay() === 6;
+        const isPast = day < currentDate.getDate();
+        const selectedMonth = currentDate.getMonth() + 1;
+        const date = new Date();
+        const currentMonth = date.getMonth() + 1;
 
         if (isWeekend) {
             div.style.backgroundColor = colorUnavailable;
-        } else {
+        } 
+        else if (isPast && selectedMonth === currentMonth) {
+            div.style.backgroundColor = colorUnavailable;
+        }
+        else {
             let occupationValue = occupationArray ? occupationArray[day - 1] : null;
 
             if (occupationValue >= 1 && occupationValue <= 9) {
@@ -86,11 +94,22 @@ function renderCalendar(date) {
             }
 
             if (day === new Date().getDate() && month === new Date().getMonth() && year === new Date().getFullYear()) {
-                div.classList.add('today');
+                div.classList.add('selected');
             }
+
+            div.setAttribute('id', 'ableToPress'); // add the class that makes the buttons pressable
         }
 
+
+
         datesGrid.appendChild(div);
+
+
+        const allAbleToPress = document.querySelectorAll('div#ableToPress');
+        // Loop through each element and attach the event listener
+        allAbleToPress.forEach(div => {
+            div.addEventListener("click", dateClicked);
+        });
     }
 
     // Fill the rest of the grid with next month's days
@@ -108,7 +127,7 @@ function renderCalendar(date) {
         }
     }
 
-    checkMonthLimits();
+    checkMonthLimits(); // checks if u can go back or forwards when loading in
 }
 
 function changeMonth(offset) {  
@@ -150,8 +169,7 @@ function checkMonthLimits() {
     const pastMonth = MonthsAgo.getMonth() + 1;
     const futureMonth = MonthsFromNow.getMonth() + 1;
 
-    console.log("current=" + currentMonth + " past=" + pastMonth + " future=" + futureMonth);
-
+    
     resetButtons();
 
     if (currentMonth === pastMonth) {
@@ -171,4 +189,93 @@ function resetButtons() {
 
     prevMonthButton.setAttribute('id', 'enabled');
     nextMonthButton.setAttribute('id', 'enabled');
+}
+
+
+
+
+
+
+// START OF THE TIMESELECTION
+
+async function dateClicked(event) {
+    console.log("CLICKED");
+    const selectedMonth = currentDate.getMonth() + 1;
+    const selectedDay = event.target.innerHTML;
+
+    changeVisibleText();
+
+    const selectedDate = document.getElementById('selected-date');
+    selectedDate.innerHTML = selectedDay + "-" + selectedMonth;
+
+    // Fetch the data using the separate function
+    const data = await getOccupationDataMonth(selectedMonth);
+
+    if (data) {
+        // Log or use the data as needed
+        console.log(data);
+        // Do something with the fetched data (e.g., display it in the UI)
+        // updateUI(data);  // You can define this function to update the UI with the fetched data.
+    } else {
+        console.error("No data available for this month.");
+    }
+
+    const morning = document.getElementById('morning');
+    const afternoon = document.getElementById('afternoon');
+    const wholeDay = document.getElementById('wholeDay');
+
+    morningOccupation = data[selectedDay]["0"][0];
+    afternoonOccupation = data[selectedDay]["1"][0];
+    wholeDayOccupation = morningOccupation + afternoonOccupation;
+
+    console.log(morningOccupation, afternoonOccupation, wholeDayOccupation);
+
+    morning.innerHTML = "Ochtend bezet: " + morningOccupation + "/5"
+    afternoon.innerHTML = "Middag bezet: " + afternoonOccupation + "/5"
+    wholeDay.innerHTML = "Hele Dag bezet: " + wholeDayOccupation + "/10"
+
+
+}
+
+
+let isFirstTime = true; // Flag to track if the function is being called for the first time
+
+function changeVisibleText() {
+    // Only run this block the first time
+    if (isFirstTime) {
+        // Select the first element with the class 'placeholder-timeselection'
+        const timeSelectionPlaceholder = document.querySelector('.placeholder-timeselection');
+        
+        // Check if the element exists before trying to change its attribute
+        if (timeSelectionPlaceholder) {
+            timeSelectionPlaceholder.setAttribute('id', 'invisible');
+        }
+                // Select the first element with the class 'placeholder-timeselection'
+        const timeSelection = document.querySelector('.timeselection');
+        
+        // Check if the element exists before trying to change its attribute
+        if (timeSelection) {
+            timeSelection.setAttribute('id', 'visible');
+        }
+
+
+        isFirstTime = false; // Set the flag to false after running this code
+    }
+}
+
+
+async function getOccupationDataMonth(selectedMonth) {
+    const fileName = `occupationData_${selectedMonth}.json`;
+    
+    try {
+        const response = await fetch(fileName);
+        if (!response.ok) {
+            throw new Error('Network response was not ok ' + response.statusText);
+        }
+        const data = await response.json();
+        return data;
+    } catch (error) {
+        console.error('Failed to fetch data: ', error);
+        return null; // Return null or handle the error in some way
+    }
 }
