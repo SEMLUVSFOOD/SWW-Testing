@@ -22,6 +22,7 @@ async function fetchOccupationData() {
         }
         occupationData = await response.json();
         renderCalendar(currentDate); // Call renderCalendar after fetching data
+        resetTimeSelection();
     } catch (error) {
         console.error('Error loading occupation data:', error);
     }
@@ -139,6 +140,7 @@ function changeMonth(offset) {
 
 function goToCurrentMonth() {
     resetButtons();
+    resetTimeSelection();
     currentDate = new Date();
     renderCalendar(currentDate);
 }
@@ -196,29 +198,33 @@ function resetButtons() {
 
 
 
+
 // START OF THE TIMESELECTION
 
 async function dateClicked(event) {
-    console.log("CLICKED");
+
+    // Remove "selected" class from all buttons
+    const allAbleToPress = document.querySelectorAll('div#ableToPress');
+
+    allAbleToPress.forEach(div => {
+        div.classList.remove('selected');
+    });
+ 
+    // Add "selected" class to the button that was clicked
+    event.target.classList.add('selected');
+ 
     const selectedMonth = currentDate.getMonth() + 1;
     const selectedDay = event.target.innerHTML;
 
-    changeVisibleText();
-
     const selectedDate = document.getElementById('selected-date');
-    selectedDate.innerHTML = selectedDay + "-" + selectedMonth;
+    selectedDate.innerHTML = "Datum geselecteerd:" + selectedDay + "-" + selectedMonth;
 
     // Fetch the data using the separate function
     const data = await getOccupationDataMonth(selectedMonth);
 
-    if (data) {
-        // Log or use the data as needed
-        console.log(data);
-        // Do something with the fetched data (e.g., display it in the UI)
-        // updateUI(data);  // You can define this function to update the UI with the fetched data.
-    } else {
+    if (!data) {
         console.error("No data available for this month.");
-    }
+    } 
 
     const morning = document.getElementById('morning');
     const afternoon = document.getElementById('afternoon');
@@ -228,39 +234,11 @@ async function dateClicked(event) {
     afternoonOccupation = data[selectedDay]["1"][0];
     wholeDayOccupation = morningOccupation + afternoonOccupation;
 
-    console.log(morningOccupation, afternoonOccupation, wholeDayOccupation);
-
     morning.innerHTML = "Ochtend bezet: " + morningOccupation + "/5"
     afternoon.innerHTML = "Middag bezet: " + afternoonOccupation + "/5"
     wholeDay.innerHTML = "Hele Dag bezet: " + wholeDayOccupation + "/10"
 
 
-}
-
-
-let isFirstTime = true; // Flag to track if the function is being called for the first time
-
-function changeVisibleText() {
-    // Only run this block the first time
-    if (isFirstTime) {
-        // Select the first element with the class 'placeholder-timeselection'
-        const timeSelectionPlaceholder = document.querySelector('.placeholder-timeselection');
-        
-        // Check if the element exists before trying to change its attribute
-        if (timeSelectionPlaceholder) {
-            timeSelectionPlaceholder.setAttribute('id', 'invisible');
-        }
-                // Select the first element with the class 'placeholder-timeselection'
-        const timeSelection = document.querySelector('.timeselection');
-        
-        // Check if the element exists before trying to change its attribute
-        if (timeSelection) {
-            timeSelection.setAttribute('id', 'visible');
-        }
-
-
-        isFirstTime = false; // Set the flag to false after running this code
-    }
 }
 
 
@@ -278,4 +256,38 @@ async function getOccupationDataMonth(selectedMonth) {
         console.error('Failed to fetch data: ', error);
         return null; // Return null or handle the error in some way
     }
+}
+
+
+
+async function resetTimeSelection(event) {
+
+    const selectedMonth = currentDate.getMonth() + 1;
+
+    // Fetch the data using the separate function
+    const data = await getOccupationDataMonth(selectedMonth);
+
+    if (!data) {
+        console.error("No data available for this month.");
+    }
+
+    const newDate = new Date(); // Create a new date object based on the current date
+    const currentDay = newDate.getDate();
+    const currentMonth = newDate.getMonth() + 1;
+
+    const selectedDate = document.getElementById('selected-date');
+    selectedDate.innerHTML = "Datum geselecteerd:" + currentDay + "-" + currentMonth;
+
+    const morning = document.getElementById('morning');
+    const afternoon = document.getElementById('afternoon');
+    const wholeDay = document.getElementById('wholeDay');
+
+    morningOccupation = data[currentDay]["0"][0];
+    afternoonOccupation = data[currentDay]["1"][0];
+    wholeDayOccupation = morningOccupation + afternoonOccupation;
+
+    morning.innerHTML = "Ochtend bezet: " + morningOccupation + "/5"
+    afternoon.innerHTML = "Middag bezet: " + afternoonOccupation + "/5"
+    wholeDay.innerHTML = "Hele Dag bezet: " + wholeDayOccupation + "/10"
+
 }
