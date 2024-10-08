@@ -6,6 +6,9 @@ const currentMonthButton = document.getElementById('current-month');
 
 let currentDate = new Date();
 
+const howFarinPast = 0;
+const howFarinFuture = 6;
+
 // Define the three colors
 const colorFull = "#E54F37";   // Red for full occupancy
 const colorNone = "#008663";    // Green for no occupancy
@@ -28,14 +31,15 @@ async function renderCalendar(date) {
     monthYearElement.innerText = `${monthNames[month]} ${year}`;
     datesGrid.innerHTML = '';
 
+    const newDate = new Date;
+    const currentMonth = newDate.getMonth();
+
     // Add the last few days of the previous month
     for (let x = firstDayIndex; x > 0; x--) {
         const div = document.createElement('div');
         div.classList.add('disabled');
         div.innerText = prevLastDay - x + 1;
 
-        const newDate = new Date;
-        const currentMonth = newDate.getMonth();
         if (currentMonth != month) {
             div.addEventListener('click', () => {
                 currentDate.setMonth(currentDate.getMonth() - 1);
@@ -101,10 +105,15 @@ async function renderCalendar(date) {
             const div = document.createElement('div');
             div.classList.add('disabled');
             div.innerText = i;
-            div.addEventListener('click', () => {
-                currentDate.setMonth(currentDate.getMonth() + 1);
-                renderCalendar(currentDate);
-            });
+            
+            const monthsInFutureMax = currentMonth + howFarinFuture - 12;
+
+            if (month != monthsInFutureMax) {
+                div.addEventListener('click', () => {
+                    currentDate.setMonth(currentDate.getMonth() + 1);
+                    renderCalendar(currentDate);
+                });
+            }
             datesGrid.appendChild(div);
         }
     }
@@ -130,8 +139,6 @@ function goToCurrentMonth() {
 
 // Check if month limits (past/future) are reached
 function checkMonthLimits() {
-    const howFarinPast = 0;
-    const howFarinFuture = 6;
 
     const newDate = new Date();
     const MonthsAgo = new Date();
