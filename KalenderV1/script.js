@@ -4,8 +4,6 @@ const prevMonthButton = document.getElementById('prev-month');
 const nextMonthButton = document.getElementById('next-month');
 const currentMonthButton = document.getElementById('current-month');
 
-const log = document.getElementById('log');
-
 let currentDate = new Date();
 
 // Define the three colors
@@ -178,8 +176,6 @@ async function dateClicked(event) {
         return;
     }
 
-    log.innerHTML += " // Datum geselecteerd: " + selectedDay + " - " + selectedMonth; 
-
     const morning = document.getElementById('morning');
     const afternoon = document.getElementById('afternoon');
     const wholeDay = document.getElementById('wholeday');
@@ -222,8 +218,6 @@ async function resetTimeSelection() {
     }
 
     const currentDay = new Date().getDate();
-
-    log.innerHTML += " // Datum geselecteerd: " + currentDay + " - " + selectedMonth; 
 
     const morning = document.getElementById('morning');
     const afternoon = document.getElementById('afternoon');
