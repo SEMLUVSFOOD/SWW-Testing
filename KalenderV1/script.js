@@ -5,7 +5,6 @@ const nextMonthButton = document.getElementById('next-month');
 const currentMonthButton = document.getElementById('current-month');
 
 let currentDate = new Date();
-let occupationData = {};  // Now empty, data will be fetched dynamically
 
 // Define the three colors
 const colorFull = "#E54F37";   // Red for full occupancy
@@ -13,101 +12,77 @@ const colorNone = "#008663";    // Green for no occupancy
 const colorPartial = "#F7C53A"; // Yellow for partial occupancy
 const colorUnavailable = "#D3D3D3"; // Gray for weekends and other unavailable days
 
-// Function to fetch the JSON data
-async function fetchOccupationData() {
-    try {
-        const response = await fetch('occupationData.json'); // Get the date, await makes it so it pauses everthing untill data is loaded
-        if (!response.ok) {
-            throw new Error('Failed to load JSON data');
-        }
-        occupationData = await response.json();
-        renderCalendar(currentDate); // Call renderCalendar after fetching data
-        resetTimeSelection();
-    } catch (error) {
-        console.error('Error loading occupation data:', error);
-    }
-}
-
-function renderCalendar(date) {
+// Function to render the calendar
+async function renderCalendar(date) {
     const year = date.getFullYear();
     const month = date.getMonth();
     const monthNames = ["Januari", "Februari", "Maart", "April", "Mei", "Juni", 
-                        "Juli", "Augustus", "September", "Oktober", "November", "December"]; // Array used in combination with the month const
+                        "Juli", "Augustus", "September", "Oktober", "November", "December"];
     
-
     const firstDay = new Date(year, month, 1);
-    const lastDay = new Date(year, month + 1, 0); // The +1 to go to next month, 0 to select the 0th day of that month basically meaning last day of last month
-    const firstDayIndex = firstDay.getDay(); //Check what day the first day is, sunday would be 0, monday 1 etc.
-    const lastDate = lastDay.getDate(); // Get the amount of days in the currently displaying month
-    const prevLastDay = new Date(year, month, 0).getDate(); // Last day of Previous Month to fill in the grayed out areas
+    const lastDay = new Date(year, month + 1, 0);
+    const firstDayIndex = firstDay.getDay();
+    const lastDate = lastDay.getDate();
+    const prevLastDay = new Date(year, month, 0).getDate();
 
     monthYearElement.innerText = `${monthNames[month]} ${year}`;
     datesGrid.innerHTML = '';
 
-    // Add the last few days of the previous month, it starts with generating the first block. That's the formula with the !!!!
+    // Add the last few days of the previous month
     for (let x = firstDayIndex; x > 0; x--) {
-        const div = document.createElement('div'); // 1. Create a new <div> element for each day
-        div.classList.add('disabled'); // 2. Add a 'disabled' class to these days (to style them differently from the current month)
-        div.innerText = prevLastDay - x + 1; // 3. Calculate and display the correct day number from the previous month !!!!!
-        
-        // 4. Add an event listener that, when clicked, will switch to the previous month
+        const div = document.createElement('div');
+        div.classList.add('disabled');
+        div.innerText = prevLastDay - x + 1;
         div.addEventListener('click', () => {
-            currentDate.setMonth(currentDate.getMonth() - 1); // Move to the previous month
-            renderCalendar(currentDate); // Re-render the calendar for the new month
+            currentDate.setMonth(currentDate.getMonth() - 1);
+            renderCalendar(currentDate);
         });
-
-        // 5. Append the newly created div to the grid of dates in the calendar
         datesGrid.appendChild(div);
     }
 
-
     // Get the occupation array for the current month
-    const occupationArray = occupationData[year] ? occupationData[year][month + 1] : null;
+    const occupationData = await getOccupationDataMonth(month + 1); // Fetch occupation data for the current month
 
     // Add all the days of the current month
     for (let day = 1; day <= lastDate; day++) {
         const div = document.createElement('div');
         div.innerText = day;
 
-        // Get the necessery variables to make past days and weekends gray
+        // Check if it's a weekend or a past day in the current month
         const currentDay = new Date(year, month, day);
         const isWeekend = currentDay.getDay() === 0 || currentDay.getDay() === 6;
-        const isPast = day < currentDate.getDate();
-        const selectedMonth = currentDate.getMonth() + 1;
-        const date = new Date();
-        const currentMonth = date.getMonth() + 1;
+        const isPast = day < currentDate.getDate() && month === new Date().getMonth() && year === new Date().getFullYear();
 
-        if (isWeekend) {
+        if (isWeekend || isPast) {
             div.style.backgroundColor = colorUnavailable;
-        } 
-        else if (isPast && selectedMonth === currentMonth) {
-            div.style.backgroundColor = colorUnavailable;
-        }
-        else {
-            let occupationValue = occupationArray ? occupationArray[day - 1] : null;
+        } else {
+            // Get the occupation data for the current day and calculate the sum
+            const dayData = occupationData[day];
+            const morningOccupation = dayData ? dayData["0"][0] : 0;
+            const afternoonOccupation = dayData ? dayData["1"][0] : 0;
+            const sum = morningOccupation + afternoonOccupation;
 
-            if (occupationValue >= 1 && occupationValue <= 9) {
+            // Determine the color based on the sum
+            if (sum >= 1 && sum < 10) {
                 div.style.backgroundColor = colorPartial; // Partial occupancy
-            } else if (occupationValue === 10) {
+            } else if (sum === 10) {
                 div.style.backgroundColor = colorFull; // Full occupancy
             } else {
-                div.style.backgroundColor = colorNone; // No data
+                div.style.backgroundColor = colorNone; // No data (or 0 occupancy)
             }
 
+            // Highlight the current day
             if (day === new Date().getDate() && month === new Date().getMonth() && year === new Date().getFullYear()) {
                 div.classList.add('selected');
             }
 
-            div.setAttribute('id', 'ableToPress'); // add the class that makes the buttons pressable
+            div.setAttribute('id', 'ableToPress');
         }
-
-
 
         datesGrid.appendChild(div);
 
-
+        // Add event listeners to selectable days
         const allAbleToPress = document.querySelectorAll('div#ableToPress');
-        // Loop through each element and attach the event listener
         allAbleToPress.forEach(div => {
             div.addEventListener("click", dateClicked);
         });
@@ -128,16 +103,17 @@ function renderCalendar(date) {
         }
     }
 
-    checkMonthLimits(); // checks if u can go back or forwards when loading in
+    checkMonthLimits(); // Check if we can navigate to the next/previous month
 }
 
-function changeMonth(offset) {  
+// Function to change the month
+function changeMonth(offset) {
     currentDate.setMonth(currentDate.getMonth() + offset);
-    checkMonthLimits(); // Call the separate function to handle month limits
-    renderCalendar(currentDate); // Re-render the calendar after changing the month
+    checkMonthLimits();
+    renderCalendar(currentDate);
 }
 
-
+// Function to reset and go to the current month
 function goToCurrentMonth() {
     resetButtons();
     resetTimeSelection();
@@ -145,46 +121,33 @@ function goToCurrentMonth() {
     renderCalendar(currentDate);
 }
 
-// Fetch data and initialize the calendar
-fetchOccupationData();
-
-// Event listeners for navigation buttons
-prevMonthButton.addEventListener('click', () => changeMonth(-1));
-nextMonthButton.addEventListener('click', () => changeMonth(1));
-
-
-
-
+// Check if month limits (past/future) are reached
 function checkMonthLimits() {
     const howFarinPast = 0;
     const howFarinFuture = 6;
 
-    const newDate = new Date(); // Create a new date object based on the current date
-
-    // Calculate the date limits based on the current date
-    const MonthsAgo = new Date(); 
-    MonthsAgo.setMonth(newDate.getMonth() + howFarinPast); // x months ago from current date
-    const MonthsFromNow = new Date(); 
-    MonthsFromNow.setMonth(newDate.getMonth() + howFarinFuture); // x months from current date
+    const newDate = new Date();
+    const MonthsAgo = new Date();
+    MonthsAgo.setMonth(newDate.getMonth() + howFarinPast);
+    const MonthsFromNow = new Date();
+    MonthsFromNow.setMonth(newDate.getMonth() + howFarinFuture);
 
     const currentMonth = currentDate.getMonth() + 1;
     const pastMonth = MonthsAgo.getMonth() + 1;
     const futureMonth = MonthsFromNow.getMonth() + 1;
 
-    
     resetButtons();
 
     if (currentMonth === pastMonth) {
         prevMonthButton.setAttribute('id', 'disabled');
         prevMonthButton.style.background = colorUnavailable;
-    } 
-    else if (currentMonth === futureMonth) {
+    } else if (currentMonth === futureMonth) {
         nextMonthButton.setAttribute('id', 'disabled');
         nextMonthButton.style.background = colorUnavailable;
     }
 }
 
-
+// Reset the buttons for month navigation
 function resetButtons() {
     prevMonthButton.style.background = "#6658A2";
     nextMonthButton.style.background = "#6658A2";
@@ -193,101 +156,80 @@ function resetButtons() {
     nextMonthButton.setAttribute('id', 'enabled');
 }
 
-
-
-
-
-
-
-// START OF THE TIMESELECTION
-
+// Handle date click event and update time slots
 async function dateClicked(event) {
-
-    // Remove "selected" class from all buttons
     const allAbleToPress = document.querySelectorAll('div#ableToPress');
-
-    allAbleToPress.forEach(div => {
-        div.classList.remove('selected');
-    });
- 
-    // Add "selected" class to the button that was clicked
+    allAbleToPress.forEach(div => div.classList.remove('selected'));
     event.target.classList.add('selected');
- 
+
     const selectedMonth = currentDate.getMonth() + 1;
     const selectedDay = event.target.innerHTML;
 
-    // const selectedDate = document.getElementById('selected-date');
-    // selectedDate.innerHTML = "Kies een tijdslot (" + selectedDay + "-" + selectedMonth + " geselecteerd):";
-
-    // Fetch the data using the separate function
     const data = await getOccupationDataMonth(selectedMonth);
 
     if (!data) {
         console.error("No data available for this month.");
-    } 
+        return;
+    }
 
     const morning = document.getElementById('morning');
     const afternoon = document.getElementById('afternoon');
     const wholeDay = document.getElementById('wholeday');
 
-    morningOccupation = data[selectedDay]["0"][0];
-    afternoonOccupation = data[selectedDay]["1"][0];
-    wholeDayOccupation = morningOccupation + afternoonOccupation;
+    const morningOccupation = data[selectedDay]["0"][0];
+    const afternoonOccupation = data[selectedDay]["1"][0];
+    const wholeDayOccupation = morningOccupation + afternoonOccupation;
 
-    morning.innerHTML = morningOccupation + "/5 bezet"
-    afternoon.innerHTML = afternoonOccupation + "/5 bezet"
-    wholeDay.innerHTML = wholeDayOccupation + "/10 bezet"
-
-
+    morning.innerHTML = `${morningOccupation}/5 bezet`;
+    afternoon.innerHTML = `${afternoonOccupation}/5 bezet`;
+    wholeDay.innerHTML = `${wholeDayOccupation}/10 bezet`;
 }
 
-
+// Fetch occupation data for a given month
 async function getOccupationDataMonth(selectedMonth) {
     const fileName = `occupationData_${selectedMonth}.json`;
-    
     try {
         const response = await fetch(fileName);
         if (!response.ok) {
             throw new Error('Network response was not ok ' + response.statusText);
         }
-        const data = await response.json();
-        return data;
+        return await response.json();
     } catch (error) {
-        console.error('Failed to fetch data: ', error);
-        return null; // Return null or handle the error in some way
+        console.error('Failed to fetch data:', error);
+        return null;
     }
 }
 
-
-
-async function resetTimeSelection(event) {
-
+// Reset time selection to the current day
+async function resetTimeSelection() {
     const selectedMonth = currentDate.getMonth() + 1;
-
-    // Fetch the data using the separate function
     const data = await getOccupationDataMonth(selectedMonth);
 
     if (!data) {
         console.error("No data available for this month.");
+        return;
     }
 
-    const newDate = new Date(); // Create a new date object based on the current date
-    const currentDay = newDate.getDate();
-    const currentMonth = newDate.getMonth() + 1;
-
-    // const selectedDate = document.getElementById('selected-date');
-    // selectedDate.innerHTML = "Kies een tijdslot (" + currentDay + "-" + currentMonth + " geselecteerd):";
+    const currentDay = new Date().getDate();
 
     const morning = document.getElementById('morning');
     const afternoon = document.getElementById('afternoon');
     const wholeDay = document.getElementById('wholeday');
 
-    morningOccupation = data[currentDay]["0"][0];
-    afternoonOccupation = data[currentDay]["1"][0];
-    wholeDayOccupation = morningOccupation + afternoonOccupation;
+    const morningOccupation = data[currentDay]["0"][0];
+    const afternoonOccupation = data[currentDay]["1"][0];
+    const wholeDayOccupation = morningOccupation + afternoonOccupation;
 
-    morning.innerHTML =  morningOccupation + "/5 bezet"
-    afternoon.innerHTML = afternoonOccupation + "/5 bezet"
-    wholeDay.innerHTML = wholeDayOccupation + "/10 bezet"
-
+    morning.innerHTML = `${morningOccupation}/5 bezet`;
+    afternoon.innerHTML = `${afternoonOccupation}/5 bezet`;
+    wholeDay.innerHTML = `${wholeDayOccupation}/10 bezet`;
 }
+
+// Initialize the calendar
+renderCalendar(currentDate);
+// Initialize the TimeSelection
+resetTimeSelection();
+
+// Event listeners for navigation buttons
+prevMonthButton.addEventListener('click', () => changeMonth(-1));
+nextMonthButton.addEventListener('click', () => changeMonth(1));
