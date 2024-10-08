@@ -33,10 +33,16 @@ async function renderCalendar(date) {
         const div = document.createElement('div');
         div.classList.add('disabled');
         div.innerText = prevLastDay - x + 1;
-        div.addEventListener('click', () => {
-            currentDate.setMonth(currentDate.getMonth() - 1);
-            renderCalendar(currentDate);
-        });
+
+        const newDate = new Date;
+        const currentMonth = newDate.getMonth();
+        if (currentMonth != month) {
+            div.addEventListener('click', () => {
+                currentDate.setMonth(currentDate.getMonth() - 1);
+                renderCalendar(currentDate);
+            });
+        }
+
         datesGrid.appendChild(div);
     }
 
