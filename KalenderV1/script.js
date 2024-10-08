@@ -116,9 +116,9 @@ function changeMonth(offset) {
 // Function to reset and go to the current month
 function goToCurrentMonth() {
     resetButtons();
-    resetTimeSelection();
     currentDate = new Date();
     renderCalendar(currentDate);
+    resetTimeSelection();
 }
 
 // Check if month limits (past/future) are reached
