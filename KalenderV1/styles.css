@@ -4,9 +4,16 @@
   font-weight: normal;  /* You can set to normal, bold, etc. */
   font-style: normal;   /* You can set to normal, italic, etc. */
 }
+@font-face {
+  font-family: 'Titling Gothic FB Narrow Standard';  /* Your custom font name */
+  src: url('../Titling\ Gothic\ FB\ Narrow\ Standard.otf') format('opentype');  /* Path to your .otf file */
+  font-weight: normal;  /* You can set to normal, bold, etc. */
+  font-style: normal;   /* You can set to normal, italic, etc. */
+}
 * {
-  font-family: 'Titling Gothic FB Narrow Medium', sans-serif; /* Use your custom font with fallbacks */
+  font-family: 'Titling Gothic FB Narrow Standard', sans-serif; /* Use your custom font with fallbacks */
   font-size: 1rem;
+  box-sizing: border-box;
 }
 
 body {
@@ -15,7 +22,7 @@ body {
     justify-content: center;
     flex-direction: column;
     margin: 10px;
-    background-color: #e5e5e5;
+    background-color: #ffffff;
 }
 h2 {
   margin: 0;
@@ -32,6 +39,7 @@ h2 {
 .calendar-container {
   padding: 20px;
   background-color: #ffffff;
+  border: #000000 solid .0625rem;
   border-radius: 6px;
 }
 
@@ -118,8 +126,6 @@ button:disabled {
 
 /* Highlight the current day */
 .dates-grid .selected {
-  text-decoration: underline;
-  font-weight: 900;
   border: 2px solid #000000;
 }
 
@@ -160,14 +166,19 @@ button:disabled {
 /* SIZING FOR DESKTOP */
 @media only screen and (min-width: 800px) {
   .calendar-container {
-    width: 45%;
+    width: 49vw;
   }
   .topsection {
     flex-direction: row;
   }
-  .time-selection-grid {
+  .block {
     margin-top: 0px !important;
-    width: 45%;
+    width: 49vw;
+  }
+
+  .rightsection-desktop {
+    display: flex;
+    flex-direction: column;
   }
 }
 
@@ -207,31 +218,25 @@ button:disabled {
   cursor: pointer;
 }
 
-.time-selection-grid {
-  color: #000000;
-  padding: 20px;
-  background-color: #ffffff;
-  border-radius: 6px;
-  margin-top: 20px;
-  height: 100%;
-}
-
-.timeselection {
+.block {
   display: flex;
   justify-content: space-around;
   border: #000000 .0625rem solid;
+  background-color: #ffffff;
   border-radius: 6px;
+  margin-top: 20px;
+  height: auto;
 }
 
 .blockselection {
-  width: 33%;
+  width: 33.333333%;
   padding: 10px;
 }
 
 /* Add borders between morning, afternoon, and whole day */
-.timeselection p {
+.block p {
   text-align: center;
-  margin: 5px;
+  margin: .3125rem 0 .3125rem 0;
 }
 
 /* Add vertical line between morning and afternoon */
@@ -247,4 +252,39 @@ button:disabled {
 
 .daypart {
   color: #008663;
+}
+
+.unavailable {
+  color: #ccc;
+  pointer-events: none;
+}
+
+.clickableTime {
+  cursor: pointer;
+}
+
+#pressedleft {
+  border: 2px solid #000000;
+  border-radius: 6px 0px 0px 6px;
+}
+#pressedmiddle {
+  border: 2px solid #000000;
+  border-radius: 0px;
+}
+#pressedright {
+  border: 2px solid #000000;
+  border-radius: 0px 6px 6px 0px;
+}
+
+
+/* START OF PLACESELECTION */
+#placeselection {
+  margin-top: 1.25rem !important;
+}
+
+.one, .two, .three, .four {
+  border-right: 1px solid #000000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }

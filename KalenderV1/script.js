@@ -4,6 +4,8 @@ const prevMonthButton = document.getElementById('prev-month');
 const nextMonthButton = document.getElementById('next-month');
 const currentMonthButton = document.getElementById('current-month');
 
+const log = document.getElementById('log');
+
 let currentDate = new Date();
 
 // Define the three colors
@@ -119,6 +121,7 @@ function goToCurrentMonth() {
     currentDate = new Date();
     renderCalendar(currentDate);
     resetTimeSelection();
+    removeTimeSelection();
 }
 
 // Check if month limits (past/future) are reached
@@ -158,6 +161,9 @@ function resetButtons() {
 
 // Handle date click event and update time slots
 async function dateClicked(event) {
+
+    removeTimeSelection();
+
     const allAbleToPress = document.querySelectorAll('div#ableToPress');
     allAbleToPress.forEach(div => div.classList.remove('selected'));
     event.target.classList.add('selected');
@@ -172,17 +178,22 @@ async function dateClicked(event) {
         return;
     }
 
+    log.innerHTML += " // Datum geselecteerd: " + selectedDay + " - " + selectedMonth; 
+
     const morning = document.getElementById('morning');
     const afternoon = document.getElementById('afternoon');
     const wholeDay = document.getElementById('wholeday');
 
-    const morningOccupation = data[selectedDay]["0"][0];
-    const afternoonOccupation = data[selectedDay]["1"][0];
-    const wholeDayOccupation = morningOccupation + afternoonOccupation;
+    const morningOccupation = 5 - data[selectedDay]["0"][0];
+    const afternoonOccupation = 5 - data[selectedDay]["1"][0];
+    // Set wholeDayOccupation to the highest of morning and afternoon occupations
+    const wholeDayOccupation = Math.min(morningOccupation, afternoonOccupation);
 
-    morning.innerHTML = `${morningOccupation}/5 bezet`;
-    afternoon.innerHTML = `${afternoonOccupation}/5 bezet`;
-    wholeDay.innerHTML = `${wholeDayOccupation}/10 bezet`;
+    morning.innerHTML = `${morningOccupation}/5 beschikbaar`;
+    afternoon.innerHTML = `${afternoonOccupation}/5 beschikbaar`;
+    wholeDay.innerHTML = `${wholeDayOccupation}/5 beschikbaar`;
+
+    decideAvailableTimes(morningOccupation, afternoonOccupation, wholeDayOccupation);
 }
 
 // Fetch occupation data for a given month
@@ -212,24 +223,139 @@ async function resetTimeSelection() {
 
     const currentDay = new Date().getDate();
 
+    log.innerHTML += " // Datum geselecteerd: " + currentDay + " - " + selectedMonth; 
+
     const morning = document.getElementById('morning');
     const afternoon = document.getElementById('afternoon');
     const wholeDay = document.getElementById('wholeday');
 
-    const morningOccupation = data[currentDay]["0"][0];
-    const afternoonOccupation = data[currentDay]["1"][0];
-    const wholeDayOccupation = morningOccupation + afternoonOccupation;
+    const morningOccupation = 5 - data[currentDay]["0"][0];
+    const afternoonOccupation = 5 - data[currentDay]["1"][0];
+    // Set wholeDayOccupation to the highest of morning and afternoon occupations
+    const wholeDayOccupation = Math.min(morningOccupation, afternoonOccupation);
 
-    morning.innerHTML = `${morningOccupation}/5 bezet`;
-    afternoon.innerHTML = `${afternoonOccupation}/5 bezet`;
-    wholeDay.innerHTML = `${wholeDayOccupation}/10 bezet`;
+    morning.innerHTML = `${morningOccupation}/5 beschikbaar`;
+    afternoon.innerHTML = `${afternoonOccupation}/5 beschikbaar`;
+    wholeDay.innerHTML = `${wholeDayOccupation}/5 beschikbaar`;
+
+    decideAvailableTimes(morningOccupation, afternoonOccupation, wholeDayOccupation);
 }
 
-// Initialize the calendar
-renderCalendar(currentDate);
-// Initialize the TimeSelection
-resetTimeSelection();
+function decideAvailableTimes(morningOccupation, afternoonOccupation, wholeDayOccupation) {
+    // Select the divs for each time slot
+    const timeSlots = {
+        morning: {
+            div: document.querySelector('.morning'),
+            occupation: morningOccupation,
+        },
+        afternoon: {
+            div: document.querySelector('.afternoon'),
+            occupation: afternoonOccupation,
+        },
+        wholeDay: {
+            div: document.querySelector('.wholeday'),
+            occupation: wholeDayOccupation,
+        },
+    };
+
+    // Remove 'clickableTime' class from all time slot divs
+    Object.values(timeSlots).forEach(({ div }) => {
+        div.classList.remove('clickableTime');
+        const paragraphs = div.getElementsByTagName('p');
+
+        // Remove 'unavailable' class from all paragraphs
+        Array.from(paragraphs).forEach(p => p.classList.remove('unavailable'));
+
+        // If occupation is 0, add the 'unavailable' class
+        if (div === timeSlots.morning.div && morningOccupation === 0) {
+            Array.from(paragraphs).forEach(p => p.classList.add('unavailable'));
+        }
+        if (div === timeSlots.afternoon.div && afternoonOccupation === 0) {
+            Array.from(paragraphs).forEach(p => p.classList.add('unavailable'));
+        }
+        if (div === timeSlots.wholeDay.div && wholeDayOccupation === 0) {
+            Array.from(paragraphs).forEach(p => p.classList.add('unavailable'));
+        }
+    });
+
+    // Add 'clickableTime' class only to the divs that have a non-zero occupation
+    if (morningOccupation !== 0) {
+        timeSlots.morning.div.classList.add('clickableTime');
+    }
+    if (afternoonOccupation !== 0) {
+        timeSlots.afternoon.div.classList.add('clickableTime');
+    }
+    if (wholeDayOccupation !== 0) {
+        timeSlots.wholeDay.div.classList.add('clickableTime');
+    }
+
+    addEventListenerToTimes();
+}
+
+
+function addEventListenerToTimes() {
+    const morning = document.querySelector('.morning');
+    const afternoon = document.querySelector('.afternoon');
+    const wholeDay = document.querySelector('.wholeday');
+
+    // Remove existing event listeners before adding new ones
+    morning.removeEventListener('click', handleClick);
+    afternoon.removeEventListener('click', handleClick);
+    wholeDay.removeEventListener('click', handleClick);
+
+    // Check for clickableTime class and add event listeners if present
+    if (morning.classList.contains('clickableTime')) {
+        morning.addEventListener('click', handleClick);
+    }
+    if (afternoon.classList.contains('clickableTime')) {
+        afternoon.addEventListener('click', handleClick);
+    }
+    if (wholeDay.classList.contains('clickableTime')) {
+        wholeDay.addEventListener('click', handleClick);
+    }
+}
+
+// Function to handle the click event
+function handleClick(event) {
+    // Get the element that triggered the event
+    const clickedElement = event.currentTarget; // This is the element that was clicked
+    const morning = document.querySelector('.morning');
+    const afternoon = document.querySelector('.afternoon');
+    const wholeDay = document.querySelector('.wholeday');
+
+    morning.removeAttribute('id', 'pressedleft');
+    afternoon.removeAttribute('id', 'pressedmiddle');
+    wholeDay.removeAttribute('id', 'pressedright');
+
+    // Check which class the clicked element has and log a corresponding message
+    if (clickedElement.classList.contains('morning')) {
+        morning.setAttribute('id', 'pressedleft');
+    } else if (clickedElement.classList.contains('afternoon')) {
+        afternoon.setAttribute('id', 'pressedmiddle');
+    } else if (clickedElement.classList.contains('wholeday')) {
+        wholeDay.setAttribute('id', 'pressedright');
+    }
+}
+
+function removeTimeSelection () {
+    const morning = document.querySelector('.morning');
+    const afternoon = document.querySelector('.afternoon');
+    const wholeDay = document.querySelector('.wholeday');
+
+    morning.removeAttribute('id', 'pressedleft');
+    afternoon.removeAttribute('id', 'pressedmiddle');
+    wholeDay.removeAttribute('id', 'pressedright');
+}
+
+
+
+
 
 // Event listeners for navigation buttons
 prevMonthButton.addEventListener('click', () => changeMonth(-1));
 nextMonthButton.addEventListener('click', () => changeMonth(1));
+
+    // Initialize the calendar
+renderCalendar(currentDate);
+// Initialize the TimeSelection
+resetTimeSelection();
