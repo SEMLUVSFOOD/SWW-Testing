@@ -8,6 +8,11 @@ var morningOccupation = 0;
 var afternoonOccupation = 0;
 var wholeDayOccupation = 0;
 
+let currentlySelectedDate;
+let currentlySelectedTime;
+let currentlySelectedPlaceNumbers;
+
+
 let currentDate = new Date();
 
 const howFarinPast = 0;
@@ -196,6 +201,9 @@ async function dateClicked(event) {
         console.error("No data available for this month.");
         return;
     }
+
+    currentlySelectedDate = selectedDay + " - " + selectedMonth;
+    updateTotals();
 
     const morning = document.getElementById('morning');
     const afternoon = document.getElementById('afternoon');
@@ -452,6 +460,16 @@ function resetPlaceNumberSelection() {
     });
 }
 
+
+function updateTotals () {
+    const selectedDayText = document.getElementById('selected-date-text');
+    const selectedTimeText = document.getElementById('selected-time-text');
+    const selectedPlaceNumbersText = document.getElementById('selected-places-text');
+
+    selectedDayText.innerHTML = currentlySelectedDate;
+    selectedTimeText.innerHTML = currentlySelectedTime;
+    selectedPlaceNumbersText.innerHTML = currentlySelectedPlaceNumbers;
+}
 
 // Event listeners for navigation buttons
 prevMonthButton.addEventListener('click', () => changeMonth(-1));

@@ -292,3 +292,19 @@ button:disabled {
 .five {
   cursor: pointer;
 }
+
+
+
+
+/* START OF TOTALS SECTION */
+#totals {
+  flex-direction: column;
+  margin-top: 1.25rem !important;
+  align-items: flex-start;
+  padding: 20px;
+}
+
+.totals-subblock {
+  display: flex;
+  gap: 10px;
+}
