@@ -11,6 +11,8 @@ var wholeDayOccupation = 0;
 let currentlySelectedDate;
 let currentlySelectedTime;
 let currentlySelectedPlaceNumbers;
+let totalPrice;
+let wholeDay;
 let whatTimeSlotisSelected;
 
 
@@ -257,6 +259,7 @@ async function resetTimeSelection() {
     const wholeDay = document.getElementById('wholeday');
 
     currentlySelectedTime = null;
+    totalPrice = null;
     updateTotals();
 
     morningOccupation = 5 - data[currentDay]["0"][0];
@@ -487,6 +490,9 @@ function resetPlaceNumberSelection() {
             div.removeAttribute('id'); // Remove the ID from the div
         }
     });
+
+    totalPrice = null;
+    updateTotals();
 }
 
 
@@ -494,18 +500,22 @@ function updateTotals (whatTimeSlotisSelected, whatPlaceNumberisSelected) {
     const selectedDayText = document.getElementById('selected-date-text');
     const selectedTimeText = document.getElementById('selected-time-text');
     const selectedPlaceNumbersText = document.getElementById('selected-places-text');
+    const totalPriceText = document.getElementById('total-price-text');
 
     if (!currentlySelectedTime){
         currentlySelectedTime = "x";
     }
     if (whatTimeSlotisSelected === 0) {
         currentlySelectedTime = "Ochtend (9.00 - 13.00)";
+        wholeDay = false;
     }
     else if (whatTimeSlotisSelected === 1) {
         currentlySelectedTime = "Middag (13.00 - 17.00)";
+        wholeDay = false;
     }
     else if (whatTimeSlotisSelected === 2) {
         currentlySelectedTime = "Hele Dag (9.00 - 17.00)";
+        wholeDay = true;
     }
 
     currentlySelectedPlaceNumbers = whatPlaceNumberisSelected;
@@ -514,9 +524,31 @@ function updateTotals (whatTimeSlotisSelected, whatPlaceNumberisSelected) {
         currentlySelectedPlaceNumbers = "x";
     }
 
+    if (!totalPrice){
+        totalPrice = "x";
+    }
+
+
+    if (currentlySelectedDate && currentlySelectedTime != "x" && currentlySelectedPlaceNumbers != "x") {
+        calculatePrice(wholeDay, currentlySelectedPlaceNumbers);
+    } 
+
     selectedDayText.innerHTML = currentlySelectedDate;
     selectedTimeText.innerHTML = currentlySelectedTime;
     selectedPlaceNumbersText.innerHTML = currentlySelectedPlaceNumbers;
+    totalPriceText.innerHTML = totalPrice;
+}
+
+function calculatePrice (wholeDay, currentlySelectedPlaceNumbers) {
+    const pricePerTimeSlotPerPerson = 7.50;
+
+    totalPrice = pricePerTimeSlotPerPerson * currentlySelectedPlaceNumbers;
+
+    if (wholeDay) {
+        totalPrice = totalPrice * 2;
+    }
+
+    return totalPrice;
 }
 
 // Event listeners for navigation buttons
