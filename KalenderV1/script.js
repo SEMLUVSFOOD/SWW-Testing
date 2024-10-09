@@ -4,6 +4,10 @@ const prevMonthButton = document.getElementById('prev-month');
 const nextMonthButton = document.getElementById('next-month');
 const currentMonthButton = document.getElementById('current-month');
 
+var morningOccupation = 0;
+var afternoonOccupation = 0;
+var wholeDayOccupation = 0;
+
 let currentDate = new Date();
 
 const howFarinPast = 0;
@@ -135,6 +139,8 @@ function goToCurrentMonth() {
     renderCalendar(currentDate);
     resetTimeSelection();
     removeTimeSelection();
+    resetPlaceNumberSelection();
+    decideClickablePlaceNumbers();
 }
 
 // Check if month limits (past/future) are reached
@@ -174,7 +180,9 @@ function resetButtons() {
 async function dateClicked(event) {
 
     removeTimeSelection();
-
+    resetPlaceNumberSelection();
+    decideClickablePlaceNumbers();
+    
     const allAbleToPress = document.querySelectorAll('div#ableToPress');
     allAbleToPress.forEach(div => div.classList.remove('selected'));
     event.target.classList.add('selected');
@@ -193,10 +201,10 @@ async function dateClicked(event) {
     const afternoon = document.getElementById('afternoon');
     const wholeDay = document.getElementById('wholeday');
 
-    const morningOccupation = 5 - data[selectedDay]["0"][0];
-    const afternoonOccupation = 5 - data[selectedDay]["1"][0];
+    morningOccupation = 5 - data[selectedDay]["0"][0];
+    afternoonOccupation = 5 - data[selectedDay]["1"][0];
     // Set wholeDayOccupation to the highest of morning and afternoon occupations
-    const wholeDayOccupation = Math.min(morningOccupation, afternoonOccupation);
+    wholeDayOccupation = Math.min(morningOccupation, afternoonOccupation);
 
     morning.innerHTML = `${morningOccupation}/5 beschikbaar`;
     afternoon.innerHTML = `${afternoonOccupation}/5 beschikbaar`;
@@ -236,10 +244,10 @@ async function resetTimeSelection() {
     const afternoon = document.getElementById('afternoon');
     const wholeDay = document.getElementById('wholeday');
 
-    const morningOccupation = 5 - data[currentDay]["0"][0];
-    const afternoonOccupation = 5 - data[currentDay]["1"][0];
+    morningOccupation = 5 - data[currentDay]["0"][0];
+    afternoonOccupation = 5 - data[currentDay]["1"][0];
     // Set wholeDayOccupation to the highest of morning and afternoon occupations
-    const wholeDayOccupation = Math.min(morningOccupation, afternoonOccupation);
+    wholeDayOccupation = Math.min(morningOccupation, afternoonOccupation);
 
     morning.innerHTML = `${morningOccupation}/5 beschikbaar`;
     afternoon.innerHTML = `${afternoonOccupation}/5 beschikbaar`;
@@ -306,24 +314,24 @@ function addEventListenerToTimes() {
     const wholeDay = document.querySelector('.wholeday');
 
     // Remove existing event listeners before adding new ones
-    morning.removeEventListener('click', handleClick);
-    afternoon.removeEventListener('click', handleClick);
-    wholeDay.removeEventListener('click', handleClick);
+    morning.removeEventListener('click', handleClickTimeSlot);
+    afternoon.removeEventListener('click', handleClickTimeSlot);
+    wholeDay.removeEventListener('click', handleClickTimeSlot);
 
     // Check for clickableTime class and add event listeners if present
     if (morning.classList.contains('clickableTime')) {
-        morning.addEventListener('click', handleClick);
+        morning.addEventListener('click', handleClickTimeSlot);
     }
     if (afternoon.classList.contains('clickableTime')) {
-        afternoon.addEventListener('click', handleClick);
+        afternoon.addEventListener('click', handleClickTimeSlot);
     }
     if (wholeDay.classList.contains('clickableTime')) {
-        wholeDay.addEventListener('click', handleClick);
+        wholeDay.addEventListener('click', handleClickTimeSlot);
     }
 }
 
 // Function to handle the click event
-function handleClick(event) {
+function handleClickTimeSlot(event) {
     // Get the element that triggered the event
     const clickedElement = event.currentTarget; // This is the element that was clicked
     const morning = document.querySelector('.morning');
@@ -337,11 +345,17 @@ function handleClick(event) {
     // Check which class the clicked element has and log a corresponding message
     if (clickedElement.classList.contains('morning')) {
         morning.setAttribute('id', 'pressedleft');
+        availablePlaces = morningOccupation;
     } else if (clickedElement.classList.contains('afternoon')) {
         afternoon.setAttribute('id', 'pressedmiddle');
+        availablePlaces = afternoonOccupation;
     } else if (clickedElement.classList.contains('wholeday')) {
         wholeDay.setAttribute('id', 'pressedright');
+        availablePlaces = wholeDayOccupation;
     }
+
+    placeNumberSelection();
+    decideClickablePlaceNumbers(availablePlaces);
 }
 
 function removeTimeSelection () {
@@ -354,8 +368,88 @@ function removeTimeSelection () {
     wholeDay.removeAttribute('id', 'pressedright');
 }
 
+function decideClickablePlaceNumbers(availablePlaces) {
+    const one = document.querySelector('.one');
+    const two = document.querySelector('.two');
+    const three = document.querySelector('.three');
+    const four = document.querySelector('.four');
+    const five = document.querySelector('.five');
+
+    one.classList.add('unavailable');
+    two.classList.add('unavailable');
+    three.classList.add('unavailable');
+    four.classList.add('unavailable');
+    five.classList.add('unavailable');
+
+    // Remove the class if availablePlaces is 5
+    if (availablePlaces === 5) {
+        one.classList.remove('unavailable');
+        two.classList.remove('unavailable');
+        three.classList.remove('unavailable');
+        four.classList.remove('unavailable');
+        five.classList.remove('unavailable');
+    } 
+    else if (availablePlaces === 4) {
+        one.classList.remove('unavailable');
+        two.classList.remove('unavailable');
+        three.classList.remove('unavailable');
+        four.classList.remove('unavailable');
+    }
+    else if (availablePlaces === 3) {
+        one.classList.remove('unavailable');
+        two.classList.remove('unavailable');
+        three.classList.remove('unavailable');
+    }
+    else if (availablePlaces === 2) {
+        one.classList.remove('unavailable');
+        two.classList.remove('unavailable');
+    }
+    else if (availablePlaces === 1) {
+        one.classList.remove('unavailable');
+    }
+}
 
 
+// Function to set up event listeners on the parent container
+function placeNumberSelection() {
+    const blockSelection = document.getElementById('placeselection');
+
+    // Add a click event listener to the parent container
+    blockSelection.addEventListener('click', (event) => {
+        // Check if the clicked element is a div with one of the relevant classes
+        const clickedDiv = event.target.closest('.blockselection'); // Find the closest parent div
+
+        if (clickedDiv) {
+            placeNumberSelected(clickedDiv); // Pass the clicked div to the function
+        }
+    });
+}
+
+// Modified placeNumberSelected function to manage IDs based on the clicked div's class
+function placeNumberSelected(clickedDiv) {
+    // Remove any existing IDs on all relevant divs
+    resetPlaceNumberSelection();
+
+    // Assign the correct ID based on the class of the clicked div
+    if (clickedDiv.classList.contains('one')) {
+        clickedDiv.id = 'pressedleft';
+    } else if (clickedDiv.classList.contains('two') || clickedDiv.classList.contains('three') || clickedDiv.classList.contains('four')) {
+        clickedDiv.id = 'pressedmiddle';
+    } else if (clickedDiv.classList.contains('five')) {
+        clickedDiv.id = 'pressedright';
+    }
+}
+
+// Function to remove IDs from all relevant divs
+function resetPlaceNumberSelection() {
+    const slots = ['one', 'two', 'three', 'four', 'five'];
+    slots.forEach(slot => {
+        const div = document.querySelector(`.${slot}`);
+        if (div) {
+            div.removeAttribute('id'); // Remove the ID from the div
+        }
+    });
+}
 
 
 // Event listeners for navigation buttons
@@ -366,3 +460,6 @@ nextMonthButton.addEventListener('click', () => changeMonth(1));
 renderCalendar(currentDate);
 // Initialize the TimeSelection
 resetTimeSelection();
+
+
+

@@ -130,7 +130,6 @@ button:disabled {
 }
 
 
-
 /* Colour the legenda */
 
 .colour-meaning {
@@ -256,7 +255,7 @@ button:disabled {
 
 .unavailable {
   color: #ccc;
-  pointer-events: none;
+  pointer-events: none !important;
 }
 
 .clickableTime {
@@ -287,4 +286,9 @@ button:disabled {
   display: flex;
   align-items: center;
   justify-content: center;
+  cursor: pointer;
+}
+
+.five {
+  cursor: pointer;
 }
