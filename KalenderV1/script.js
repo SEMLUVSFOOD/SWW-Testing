@@ -100,6 +100,9 @@ async function renderCalendar(date) {
 
         datesGrid.appendChild(div);
 
+        currentlySelectedDate = new Date().getDate() + " - " + (new Date().getMonth() + 1);
+        updateTotals();
+
         // Add event listeners to selectable days
         const allAbleToPress = document.querySelectorAll('div#ableToPress');
         allAbleToPress.forEach(div => {
