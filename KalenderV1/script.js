@@ -355,6 +355,7 @@ function handleClickTimeSlot(event) {
     }
 
     placeNumberSelection();
+    resetPlaceNumberSelection();
     decideClickablePlaceNumbers(availablePlaces);
 }
 
