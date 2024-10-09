@@ -300,11 +300,12 @@ button:disabled {
 #totals {
   flex-direction: column;
   margin-top: 1.25rem !important;
-  align-items: flex-start;
   padding: 20px;
+  width: 100%;
 }
 
 .totals-subblock {
   display: flex;
   gap: 10px;
+  justify-content: space-between;
 }

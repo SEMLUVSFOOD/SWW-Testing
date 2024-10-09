@@ -11,6 +11,7 @@ var wholeDayOccupation = 0;
 let currentlySelectedDate;
 let currentlySelectedTime;
 let currentlySelectedPlaceNumbers;
+let whatTimeSlotisSelected;
 
 
 let currentDate = new Date();
@@ -255,6 +256,9 @@ async function resetTimeSelection() {
     const afternoon = document.getElementById('afternoon');
     const wholeDay = document.getElementById('wholeday');
 
+    currentlySelectedTime = null;
+    updateTotals();
+
     morningOccupation = 5 - data[currentDay]["0"][0];
     afternoonOccupation = 5 - data[currentDay]["1"][0];
     // Set wholeDayOccupation to the highest of morning and afternoon occupations
@@ -353,18 +357,24 @@ function handleClickTimeSlot(event) {
     afternoon.removeAttribute('id', 'pressedmiddle');
     wholeDay.removeAttribute('id', 'pressedright');
 
+    var whatTimeSlotisSelected;
+
     // Check which class the clicked element has and log a corresponding message
     if (clickedElement.classList.contains('morning')) {
         morning.setAttribute('id', 'pressedleft');
         availablePlaces = morningOccupation;
+        whatTimeSlotisSelected = 0;
     } else if (clickedElement.classList.contains('afternoon')) {
         afternoon.setAttribute('id', 'pressedmiddle');
         availablePlaces = afternoonOccupation;
+        whatTimeSlotisSelected = 1;
     } else if (clickedElement.classList.contains('wholeday')) {
         wholeDay.setAttribute('id', 'pressedright');
         availablePlaces = wholeDayOccupation;
+        whatTimeSlotisSelected = 2;
     }
 
+    updateTotals(whatTimeSlotisSelected);
     placeNumberSelection();
     resetPlaceNumberSelection();
     decideClickablePlaceNumbers(availablePlaces);
@@ -378,6 +388,9 @@ function removeTimeSelection () {
     morning.removeAttribute('id', 'pressedleft');
     afternoon.removeAttribute('id', 'pressedmiddle');
     wholeDay.removeAttribute('id', 'pressedright');
+
+    currentlySelectedTime = null;
+    updateTotals();
 }
 
 function decideClickablePlaceNumbers(availablePlaces) {
@@ -442,14 +455,27 @@ function placeNumberSelected(clickedDiv) {
     // Remove any existing IDs on all relevant divs
     resetPlaceNumberSelection();
 
+    var whatPlaceNumberisSelected = null;
+
     // Assign the correct ID based on the class of the clicked div
     if (clickedDiv.classList.contains('one')) {
         clickedDiv.id = 'pressedleft';
-    } else if (clickedDiv.classList.contains('two') || clickedDiv.classList.contains('three') || clickedDiv.classList.contains('four')) {
+        whatPlaceNumberisSelected = 1;
+    } else if (clickedDiv.classList.contains('two')) {
         clickedDiv.id = 'pressedmiddle';
+        whatPlaceNumberisSelected = 2;
+    } else if (clickedDiv.classList.contains('three')) {
+        clickedDiv.id = 'pressedmiddle';
+        whatPlaceNumberisSelected = 3;
+    } else if (clickedDiv.classList.contains('four')) {
+        clickedDiv.id = 'pressedmiddle';
+        whatPlaceNumberisSelected = 4;
     } else if (clickedDiv.classList.contains('five')) {
         clickedDiv.id = 'pressedright';
+        whatPlaceNumberisSelected = 5;
     }
+
+    updateTotals(whatTimeSlotisSelected, whatPlaceNumberisSelected);
 }
 
 // Function to remove IDs from all relevant divs
@@ -464,10 +490,29 @@ function resetPlaceNumberSelection() {
 }
 
 
-function updateTotals () {
+function updateTotals (whatTimeSlotisSelected, whatPlaceNumberisSelected) {
     const selectedDayText = document.getElementById('selected-date-text');
     const selectedTimeText = document.getElementById('selected-time-text');
     const selectedPlaceNumbersText = document.getElementById('selected-places-text');
+
+    if (!currentlySelectedTime){
+        currentlySelectedTime = "x";
+    }
+    if (whatTimeSlotisSelected === 0) {
+        currentlySelectedTime = "Ochtend (9.00 - 13.00)";
+    }
+    else if (whatTimeSlotisSelected === 1) {
+        currentlySelectedTime = "Middag (13.00 - 17.00)";
+    }
+    else if (whatTimeSlotisSelected === 2) {
+        currentlySelectedTime = "Hele Dag (9.00 - 17.00)";
+    }
+
+    currentlySelectedPlaceNumbers = whatPlaceNumberisSelected;
+
+    if (!currentlySelectedPlaceNumbers){
+        currentlySelectedPlaceNumbers = "x";
+    }
 
     selectedDayText.innerHTML = currentlySelectedDate;
     selectedTimeText.innerHTML = currentlySelectedTime;
