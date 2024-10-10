@@ -509,18 +509,18 @@ function updateTotals (whatTimeSlotisSelected, whatPlaceNumberisSelected) {
 
 
     if (!currentlySelectedTime){
-        currentlySelectedTime = "x";
+        currentlySelectedTime = "x <br> <br>";
     }
     if (whatTimeSlotisSelected === 0) {
-        currentlySelectedTime = "Ochtend (9.00 - 13.00)";
+        currentlySelectedTime = "Ochtend <br> (9.00 - 13.00)";
         wholeDay = false;
     }
     else if (whatTimeSlotisSelected === 1) {
-        currentlySelectedTime = "Middag (13.00 - 17.00)";
+        currentlySelectedTime = "Middag <br> (13.00 - 17.00)";
         wholeDay = false;
     }
     else if (whatTimeSlotisSelected === 2) {
-        currentlySelectedTime = "Dag (9.00 - 17.00)";
+        currentlySelectedTime = "Dag <br> (9.00 - 17.00)";
         wholeDay = true;
     }
 

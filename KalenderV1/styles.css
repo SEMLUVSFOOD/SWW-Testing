@@ -334,7 +334,7 @@ hr {
   margin: 1em 0;
   padding: 0;
 }
-#selected-date-text {
+#selected-date-text, #selected-time-text {
   text-align: right;
 }
 
