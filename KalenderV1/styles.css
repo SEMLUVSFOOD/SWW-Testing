@@ -24,9 +24,7 @@ body {
     margin: 10px;
     background-color: #ffffff;
 }
-h2 {
-  margin: 0;
-}
+
 
 .topsection {
   display: flex;
@@ -35,12 +33,17 @@ h2 {
   width: 100%;
 }
 
+h2 {
+margin-bottom: .625rem;
+}
+
 /* General calendar container */
 .calendar-container {
   padding: 20px;
   background-color: #ffffff;
   border: #000000 solid .0625rem;
   border-radius: 6px;
+  margin-bottom: .625rem;
 }
 
 /* Month and Year display */
@@ -166,6 +169,7 @@ button:disabled {
 @media only screen and (min-width: 800px) {
   .calendar-container {
     width: 49vw;
+    margin-bottom: 0rem;
   }
   .topsection {
     flex-direction: row;
@@ -191,14 +195,21 @@ button:disabled {
 /* START OF BACKBUTTON */
 .backbutton {
   padding: 20px;
-  background-color: #6658A2;
   border-radius: 6px;
   margin-bottom: 20px;
   display: flex;
   justify-content: center;
-  font-weight: bold;
+  color: #ffffff;
+}
+
+a {
   text-decoration: none; 
   color: #ffffff;
+  background-color: #6658A2;
+  padding: 10px;
+  border-radius: 6px;
+  display: flex;
+  justify-content: center;
 }
 
 
@@ -277,10 +288,6 @@ button:disabled {
 
 
 /* START OF PLACESELECTION */
-#placeselection {
-  margin-top: 1.25rem !important;
-}
-
 .one, .two, .three, .four {
   border-right: 1px solid #000000;
   display: flex;
@@ -299,7 +306,6 @@ button:disabled {
 /* START OF TOTALS SECTION */
 #totals {
   flex-direction: column;
-  margin-top: 1.25rem !important;
   padding: 20px;
   width: 100%;
 }
@@ -308,4 +314,18 @@ button:disabled {
   display: flex;
   gap: 10px;
   justify-content: space-between;
+}
+
+
+/* Payment button */
+.payment-button {
+  margin-top: .625rem;
+  width: 100%;
+}
+
+.payment-button.unavailable {
+  background-color: gray !important;
+}
+.payment-button button {
+  background-color: transparent;
 }

@@ -259,7 +259,7 @@ async function resetTimeSelection() {
     const wholeDay = document.getElementById('wholeday');
 
     currentlySelectedTime = null;
-    totalPrice = null;
+    totalPrice = 0;
     updateTotals();
 
     morningOccupation = 5 - data[currentDay]["0"][0];
@@ -491,7 +491,7 @@ function resetPlaceNumberSelection() {
         }
     });
 
-    totalPrice = null;
+    totalPrice = 0;
     updateTotals();
 }
 
@@ -501,6 +501,8 @@ function updateTotals (whatTimeSlotisSelected, whatPlaceNumberisSelected) {
     const selectedTimeText = document.getElementById('selected-time-text');
     const selectedPlaceNumbersText = document.getElementById('selected-places-text');
     const totalPriceText = document.getElementById('total-price-text');
+    const paymentButton = document.querySelector('.payment-button');
+
 
     if (!currentlySelectedTime){
         currentlySelectedTime = "x";
@@ -524,19 +526,23 @@ function updateTotals (whatTimeSlotisSelected, whatPlaceNumberisSelected) {
         currentlySelectedPlaceNumbers = "x";
     }
 
-    if (!totalPrice){
-        totalPrice = "x";
-    }
-
-
     if (currentlySelectedDate && currentlySelectedTime != "x" && currentlySelectedPlaceNumbers != "x") {
         calculatePrice(wholeDay, currentlySelectedPlaceNumbers);
     } 
 
+    console.log(totalPrice);
+    if (totalPrice === 0){
+        totalPriceText.innerHTML = "€0.00";
+        paymentButton.classList.add('unavailable'); // Removes the 'unavailable' class
+    }
+    else if (totalPrice > 0) {
+        totalPriceText.innerHTML = "€" + totalPrice;
+        paymentButton.classList.remove('unavailable'); // Removes the 'unavailable' class
+    }
+
     selectedDayText.innerHTML = currentlySelectedDate;
     selectedTimeText.innerHTML = currentlySelectedTime;
     selectedPlaceNumbersText.innerHTML = currentlySelectedPlaceNumbers;
-    totalPriceText.innerHTML = totalPrice;
 }
 
 function calculatePrice (wholeDay, currentlySelectedPlaceNumbers) {
@@ -547,6 +553,8 @@ function calculatePrice (wholeDay, currentlySelectedPlaceNumbers) {
     if (wholeDay) {
         totalPrice = totalPrice * 2;
     }
+
+    totalPrice = totalPrice.toFixed(2);
 
     return totalPrice;
 }
