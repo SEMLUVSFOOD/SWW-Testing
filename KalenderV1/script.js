@@ -520,7 +520,7 @@ function updateTotals (whatTimeSlotisSelected, whatPlaceNumberisSelected) {
         wholeDay = false;
     }
     else if (whatTimeSlotisSelected === 2) {
-        currentlySelectedTime = "Dag <br> (9.00 - 17.00)";
+        currentlySelectedTime = "Hele dag <br> (9.00 - 17.00)";
         wholeDay = true;
     }
 
