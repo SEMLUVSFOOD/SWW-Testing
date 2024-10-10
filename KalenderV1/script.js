@@ -14,6 +14,7 @@ let currentlySelectedPlaceNumbers;
 let totalPrice;
 let wholeDay;
 let whatTimeSlotisSelected;
+let dayOfWeekName;
 
 
 let currentDate = new Date();
@@ -103,7 +104,7 @@ async function renderCalendar(date) {
 
         datesGrid.appendChild(div);
 
-        currentlySelectedDate = new Date().getDate() + " - " + (new Date().getMonth() + 1);
+        currentlySelectedDate = new Date().getDate() + " - " + (new Date().getMonth() + 1) +  " - " + (new Date().getFullYear());
         updateTotals();
 
         // Add event listeners to selectable days
@@ -199,7 +200,10 @@ async function dateClicked(event) {
     event.target.classList.add('selected');
 
     const selectedMonth = currentDate.getMonth() + 1;
+    const selectedYear = currentDate.getFullYear();
     const selectedDay = event.target.innerHTML;
+
+    console.log(currentDate);
 
     const data = await getOccupationDataMonth(selectedMonth);
 
@@ -208,7 +212,7 @@ async function dateClicked(event) {
         return;
     }
 
-    currentlySelectedDate = selectedDay + " - " + selectedMonth;
+    currentlySelectedDate = selectedDay + " - " + selectedMonth + " - " + selectedYear;
     updateTotals();
 
     const morning = document.getElementById('morning');
@@ -516,7 +520,7 @@ function updateTotals (whatTimeSlotisSelected, whatPlaceNumberisSelected) {
         wholeDay = false;
     }
     else if (whatTimeSlotisSelected === 2) {
-        currentlySelectedTime = "Hele Dag (9.00 - 17.00)";
+        currentlySelectedTime = "Dag (9.00 - 17.00)";
         wholeDay = true;
     }
 
@@ -530,7 +534,6 @@ function updateTotals (whatTimeSlotisSelected, whatPlaceNumberisSelected) {
         calculatePrice(wholeDay, currentlySelectedPlaceNumbers);
     } 
 
-    console.log(totalPrice);
     if (totalPrice === 0){
         totalPriceText.innerHTML = "€0.00";
         paymentButton.classList.add('unavailable'); // Removes the 'unavailable' class
@@ -540,7 +543,9 @@ function updateTotals (whatTimeSlotisSelected, whatPlaceNumberisSelected) {
         paymentButton.classList.remove('unavailable'); // Removes the 'unavailable' class
     }
 
-    selectedDayText.innerHTML = currentlySelectedDate;
+    getDayName(currentlySelectedDate);
+
+    selectedDayText.innerHTML = dayOfWeekName + "<br>" + currentlySelectedDate;
     selectedTimeText.innerHTML = currentlySelectedTime;
     selectedPlaceNumbersText.innerHTML = currentlySelectedPlaceNumbers;
 }
@@ -557,6 +562,24 @@ function calculatePrice (wholeDay, currentlySelectedPlaceNumbers) {
     totalPrice = totalPrice.toFixed(2);
 
     return totalPrice;
+}
+
+function getDayName (currentlySelectedDate) {
+    // Split the string into day, month, and year
+    const [day, month, year] = currentlySelectedDate.split(' - ');
+    // Create a new Date object (months are zero-indexed, so subtract 1 from the month)
+    const dateObj = new Date(year, month - 1, day);
+
+    // Array of days of the week
+    const daysOfWeek = ["Zondag", "Maandag", "Dinsdag", "Woensdag", "Donderdag", "Vrijdag", "Zaterdag"];
+
+    // Get the day of the week as a number (0 = Sunday, 1 = Monday, etc.)
+    const dayOfWeekNumber = dateObj.getDay();
+
+    // Get the day of the week as a string
+    dayOfWeekName = daysOfWeek[dayOfWeekNumber];
+
+    return dayOfWeekName;
 }
 
 // Event listeners for navigation buttons
