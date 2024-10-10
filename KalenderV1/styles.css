@@ -34,7 +34,8 @@ body {
 }
 
 h2 {
-margin-bottom: .625rem;
+margin-bottom: 0rem;
+font-size: 1rem;
 }
 
 /* General calendar container */
@@ -42,8 +43,7 @@ margin-bottom: .625rem;
   padding: 20px;
   background-color: #ffffff;
   border: #000000 solid .0625rem;
-  border-radius: 6px;
-  margin-bottom: .625rem;
+  border-radius: 0px 0px 6px 6px;
 }
 
 /* Month and Year display */
@@ -51,6 +51,7 @@ margin-bottom: .625rem;
   display: flex;
   justify-content: space-between;
   align-items: center;
+  gap: 10px;
 }
 
 .month-selection {
@@ -234,7 +235,7 @@ a {
   justify-content: space-around;
   border: #000000 .0625rem solid;
   background-color: #ffffff;
-  border-radius: 6px;
+  border-radius: 0px 0px 6px 6px;
 }
 
 #timeselection {
@@ -283,7 +284,7 @@ a {
 
 #pressedleft {
   border: 2px solid #000000;
-  border-radius: 6px 0px 0px 6px;
+  border-radius: 0px 0px 0px 6px;
 }
 #pressedmiddle {
   border: 2px solid #000000;
@@ -291,7 +292,7 @@ a {
 }
 #pressedright {
   border: 2px solid #000000;
-  border-radius: 0px 6px 6px 0px;
+  border-radius: 0px 0px 6px 0px;
 }
 
 
@@ -350,4 +351,29 @@ hr {
 }
 .payment-button button {
   background-color: transparent;
+}
+
+
+
+/*Adding the background after Stijn feedback */
+.seperateBackGround {
+  border-radius: 6px 6px 0px 0px; 
+  padding: .625rem;
+}
+
+#redBG {
+  background-color: #E54F37;
+
+}
+
+#yellowBG {
+  background-color: #F7C53A;
+}
+
+#greenBG {
+  background-color: #008663;
+}
+
+#pinkBG {
+  background-color: #F093B8;
 }
