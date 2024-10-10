@@ -61,10 +61,10 @@ margin-bottom: .625rem;
 }
 
 button {
-  background-color: #6658A2;
-  color: rgb(255, 255, 255);
+  background-color: #F093B8;
+  color: rgb(0, 0, 0);
   border: none;
-  padding: 10px;
+  padding: 15px;
   border-radius: 5px;
   font-size: 16px;
   cursor: pointer;
@@ -199,13 +199,12 @@ button:disabled {
   margin-bottom: 20px;
   display: flex;
   justify-content: center;
-  color: #ffffff;
 }
 
 a {
   text-decoration: none; 
-  color: #ffffff;
-  background-color: #6658A2;
+  color: #000000;
+  background-color: #F093B8;
   padding: 10px;
   border-radius: 6px;
   display: flex;

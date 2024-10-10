@@ -180,8 +180,8 @@ function checkMonthLimits() {
 
 // Reset the buttons for month navigation
 function resetButtons() {
-    prevMonthButton.style.background = "#6658A2";
-    nextMonthButton.style.background = "#6658A2";
+    prevMonthButton.style.background = "#F093B8";
+    nextMonthButton.style.background = "#F093B8";
 
     prevMonthButton.setAttribute('id', 'enabled');
     nextMonthButton.setAttribute('id', 'enabled');
