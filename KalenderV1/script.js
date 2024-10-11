@@ -18,6 +18,11 @@ let dayOfWeekName;
 
 
 let currentDate = new Date();
+let currentYear = currentDate.getFullYear();
+let currentMonth = currentDate.getMonth();
+let currentDay = currentDate.getDate();
+let currentDayOfTheWeek = currentDate.getDay();
+
 
 const howFarinPast = 0;
 const howFarinFuture = 6;
@@ -44,9 +49,6 @@ async function renderCalendar(date) {
     monthYearElement.innerText = `${monthNames[month]} ${year}`;
     datesGrid.innerHTML = '';
 
-    const newDate = new Date;
-    const currentMonth = newDate.getMonth();
-
     // Add the last few days of the previous month
     for (let x = firstDayIndex; x > 0; x--) {
         const div = document.createElement('div');
@@ -55,7 +57,7 @@ async function renderCalendar(date) {
 
         if (currentMonth != month) {
             div.addEventListener('click', () => {
-                currentDate.setMonth(currentDate.getMonth() - 1);
+                currentDate.setMonth(currentMonth - 1);
                 renderCalendar(currentDate);
             });
         }
@@ -74,7 +76,7 @@ async function renderCalendar(date) {
         // Check if it's a weekend or a past day in the current month
         const currentDay = new Date(year, month, day);
         const isWeekend = currentDay.getDay() === 0 || currentDay.getDay() === 6;
-        const isPast = day < currentDate.getDate() && month === new Date().getMonth() && year === new Date().getFullYear();
+        const isPast = day < currentDate.getDate() && month === currentMonth && year === currentYear;
 
         if (isWeekend || isPast) {
             div.style.backgroundColor = colorUnavailable;
@@ -95,7 +97,7 @@ async function renderCalendar(date) {
             }
 
             // Highlight the current day
-            if (day === new Date().getDate() && month === new Date().getMonth() && year === new Date().getFullYear()) {
+            if (day === new Date().getDate() && month === currentMonth && year === currentYear && new Date().getDate() != 0 && new Date().getDate() != 6) {
                 div.classList.add('selected');
             }
 
