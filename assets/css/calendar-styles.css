@@ -141,33 +141,33 @@ button:disabled {
 
 /* Grid structure for the days */
 .dates-grid {
-	display: flex;
+	display: grid;
+	grid-template-columns: repeat( 7, 1fr );
+	grid-gap: .3125rem;
 	margin-top: 10px;
 	flex-direction: row;
 	flex-wrap: wrap;
 	justify-content: space-between;
 }
 
-.dates-grid div {
-	margin-top: .3125rem;
-}
 
 .days-grid {
-	display: flex;
+	list-style: none;
+	margin: 0;
+	padding: 0;
 	width: 100%;
-	flex-direction: row;
-	justify-content: space-between;
 	margin-top: 20px;
-}
-
-.day {
-	width: 13.285%;
 	text-align: center;
 }
 
-/* Each date (number) in the calendar */
-.dates-grid div {
+/*
+.day {
 	width: 13.285%;
+	text-align: center;
+}*/
+
+/* Each date (number) in the calendar */
+.dates-grid .day {
 	aspect-ratio: 1;
 	display: flex;
 	justify-content: center;
@@ -176,10 +176,11 @@ button:disabled {
 	border-radius: 6px;
 	font-size: 16px;
 	font-weight: bold;
+	background: var( --bg-color );
 }
 
 /* Disabled dates for previous or next month */
-.dates-grid .disabled {
+.dates-grid .day[disabled="true"]:not(.bg--red) {
 	color: var(--grey);
 }
 
