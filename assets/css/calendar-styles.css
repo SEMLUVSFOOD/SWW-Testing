@@ -1,0 +1,411 @@
+/** Variables and fonts **/
+@font-face {
+	font-family: 'Titling Gothic FB Narrow Medium';
+	/* Your custom font name */
+	src: url('../Titling\ Gothic\ FB\ Narrow\ Medium.otf') format('opentype');
+	/* Path to your .otf file */
+	font-weight: normal;
+	/* You can set to normal, bold, etc. */
+	font-style: normal;
+	/* You can set to normal, italic, etc. */
+}
+
+@font-face {
+	font-family: 'Titling Gothic FB Narrow Standard';
+	/* Your custom font name */
+	src: url('../Titling\ Gothic\ FB\ Narrow\ Standard.otf') format('opentype');
+	/* Path to your .otf file */
+	font-weight: normal;
+	/* You can set to normal, bold, etc. */
+	font-style: normal;
+	/* You can set to normal, italic, etc. */
+}
+
+* {
+	font-family: 'Titling Gothic FB Narrow Standard', sans-serif;
+	/* Use your custom font with fallbacks */
+	font-size: 1rem;
+	box-sizing: border-box;
+}
+
+:root {
+	--red: #E54F37;
+	--yellow: #F7C53A;
+	--green: #008663;
+	--pink: #F093B8;
+	--grey: #cccccc;
+	--black: #000;
+	--white: #fff;
+}
+
+.bg--red {
+	--bg-color: var(--red);
+}
+
+.bg--yellow {
+	--bg-color: var(--yellow);
+}
+
+.bg--green {
+	--bg-color: var(--green);
+}
+
+.bg--pink {
+	--bg-color: var(--pink);
+}
+
+/** Page styling **/
+
+body {
+	font-family: Arial, sans-serif;
+	display: flex;
+	justify-content: center;
+	flex-direction: column;
+	margin: 10px;
+	background-color: var(--white);
+}
+
+.reservation-form {
+	display: flex;
+	flex-flow: row wrap;
+	gap: 1rem;
+	align-items: flex-start;
+}
+
+.calendar,
+.time-picker {
+	display: flex;
+	justify-content: space-between;
+	flex-direction: column;
+	flex: 1 0 100%;
+}
+
+@media only screen and (min-width: 1180px) {
+
+	.calendar,
+	.time-picker {
+		flex: 1;
+	}
+}
+
+h2 {
+	margin-bottom: 0rem;
+	font-size: 1rem;
+}
+
+/* General calendar container */
+.calendar-container {
+	padding: 20px;
+	background-color: #ffffff;
+	border: var(--black) solid .0625rem;
+	border-radius: 0px 0px 6px 6px;
+}
+
+/* Month and Year display */
+.calendar-header {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	gap: 10px;
+}
+
+.month-selection {
+	width: 70%;
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+}
+
+button {
+	background-color: var(--pink);
+	color: rgb(0, 0, 0);
+	border: none;
+	padding: 15px;
+	border-radius: 5px;
+	font-size: 16px;
+	cursor: pointer;
+}
+
+button:disabled {
+	background-color: var(--grey);
+}
+
+#disabled {
+	pointer-events: none;
+}
+
+#month-year {
+	font-size: 1rem;
+	text-align: center;
+}
+
+/* Grid structure for the days */
+.dates-grid {
+	display: flex;
+	margin-top: 10px;
+	flex-direction: row;
+	flex-wrap: wrap;
+	justify-content: space-between;
+}
+
+.dates-grid div {
+	margin-top: .3125rem;
+}
+
+.days-grid {
+	display: flex;
+	width: 100%;
+	flex-direction: row;
+	justify-content: space-between;
+	margin-top: 20px;
+}
+
+.day {
+	width: 13.285%;
+	text-align: center;
+}
+
+/* Each date (number) in the calendar */
+.dates-grid div {
+	width: 13.285%;
+	aspect-ratio: 1;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	border: 1px solid var(--grey);
+	border-radius: 6px;
+	font-size: 16px;
+	font-weight: bold;
+}
+
+/* Disabled dates for previous or next month */
+.dates-grid .disabled {
+	color: var(--grey);
+}
+
+/* Highlight the current day */
+.dates-grid .selected {
+	border: 2px solid var(--black);
+}
+
+
+/* Colour the legenda */
+
+.colour--meaning {
+	display: flex;
+	justify-content: space-between;
+}
+
+.colour--block {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	gap: .625rem;
+}
+
+.colour {
+	background: var(--bg-color);
+	border-radius: 6px;
+	width: 25px;
+	height: 25px;
+}
+
+/* SIZING FOR DESKTOP */
+/*@media only screen and (min-width: 1000px) {
+	.calendar-container {
+	width: 100%;
+	margin-bottom: 0rem;
+	}
+	.topsection {
+	flex-direction: row;
+	gap: 20px;
+	}
+	.block {
+	margin-top: 0px !important;
+	width: 49vw;
+	}
+
+	.rightsection-desktop {
+	display: flex;
+	flex-direction: column;
+	justify-content: space-between;
+	}
+}*/
+
+
+/* START OF BACKBUTTON */
+.backbutton {
+	padding: 20px;
+	border-radius: 6px;
+	margin-bottom: 20px;
+	display: flex;
+	justify-content: center;
+}
+
+a {
+	text-decoration: none;
+	color: var(--black);
+	background-color: var(--pink);
+	padding: 10px;
+	border-radius: 6px;
+	display: flex;
+	justify-content: center;
+}
+
+
+/* START OF MAKING THE TIME SELECTION */
+#ableToPress {
+	cursor: pointer;
+}
+
+.block {
+	display: flex;
+	justify-content: space-around;
+	border: var(--black) .0625rem solid;
+	background-color: var(--white);
+	border-radius: 0px 0px 6px 6px;
+}
+
+#timeselection {
+	height: 7.5rem;
+	align-items: center;
+}
+
+.blockselection {
+	width: 33.333333%;
+	padding: 10px;
+	height: 100%;
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+}
+
+/* Add borders between morning, afternoon, and whole day */
+.block p {
+	text-align: center;
+	margin: .3125rem 0 .3125rem 0;
+}
+
+/* Add vertical line between morning and afternoon */
+.morning {
+	border-right: 1px solid var(--black);
+}
+
+/* Add vertical line between afternoon and whole day */
+.afternoon {
+	border-right: 1px solid var(--black);
+}
+
+
+.daypart {
+	color: var(--green);
+}
+
+.unavailable {
+	color: var(--grey);
+	pointer-events: none;
+}
+
+.clickableTime {
+	cursor: pointer;
+}
+
+#pressedleft {
+	border: 2px solid var(--black);
+	border-radius: 0px 0px 0px 6px;
+}
+
+#pressedmiddle {
+	border: 2px solid var(--black);
+	border-radius: 0px;
+}
+
+#pressedright {
+	border: 2px solid var(--black);
+	border-radius: 0px 0px 6px 0px;
+}
+
+
+/* START OF PLACESELECTION */
+.one,
+.two,
+.three,
+.four {
+	border-right: 1px solid var(--black);
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	cursor: pointer;
+}
+
+.five {
+	cursor: pointer;
+}
+
+#placeselection {
+	height: 5rem;
+	align-items: center;
+}
+
+
+
+/* START OF TOTALS SECTION */
+#totals {
+	flex-direction: column;
+	padding: 20px;
+	width: 100%;
+}
+
+.totals-subblock {
+	display: flex;
+	gap: 10px;
+	justify-content: space-between;
+}
+
+hr {
+	display: block;
+	height: 1px;
+	border: 0;
+	border-top: 1px solid var(--grey);
+	margin: 1em 0;
+	padding: 0;
+}
+
+#selected-date-text,
+#selected-time-text {
+	text-align: right;
+}
+
+/* Payment button */
+.payment-button {
+	margin-top: .625rem;
+	width: 100%;
+}
+
+.payment-button.unavailable {
+	background-color: var(--grey);
+}
+
+.payment-button button {
+	background-color: transparent;
+}
+
+
+
+.panel--header {
+	margin: 0;
+	border-radius: 6px 6px 0px 0px;
+	padding: .625rem;
+	border: 1px solid var(--bg-color);
+	border-bottom: 0;
+	background-color: var(--bg-color);
+}
+
+footer {
+	height: 500px;
+	background-color: white;
+	width: 100%;
+	margin-top: 1.25rem;
+	padding: 0px;
+	border-top: .125rem solid black;
+}

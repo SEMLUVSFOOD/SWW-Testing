@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Interactive Calendar</title>
+    <link rel="stylesheet" href="/assets/css/calendar-styles.css">
+    <script defer src="/assets/js/calendar.js"></script>
+</head>
+<body>
+	<a class="backbutton" href="../index.html">
+		Terug naar selectie
+	</a>
+<main class="reservation-form">
+    <section class="calendar">
+		<h2 class="panel--header bg--yellow">1. Selecteer een datum:</h2>
+		<section class="calendar-container">
+			<header class="calendar-header">
+				<nav class="month-selection">
+					<button id="prev-month">&lt;</button>
+					<span id="month-year"></span>
+					<button id="next-month">&gt;</button>
+				</nav>
+				<button onclick="goToCurrentMonth()">Vandaag</button>
+			</header>
+			<section class="calendar-grid">
+				<ul class="days-grid">
+					<li class="day">Sun</li>
+					<li class="day">Mon</li>
+					<li class="day">Tue</li>
+					<li class="day">Wed</li>
+					<li class="day">Thu</li>
+					<li class="day">Fri</li>
+					<li class="day">Sat</li>
+				</ul>
+				<section id="dates" class="dates-grid"></section>
+			</section>
+			<div class="colour--meaning">
+				<div class="colour--block">
+					<div class="colour bg--green"></div>
+					<p>Leeg</p>
+				</div>
+				<div class="colour--block">
+					<div class="colour bg--yellow"></div>
+					<p>Deels vol</p>
+				</div>
+				<div class="colour--block">
+					<div class="colour bg--red"></div>
+					<p>Vol</p>
+				</div>
+			</div>
+		</section>
+	</section>
+
+	<section class="time-picker">
+		<div>
+			<h2 class="panel--header bg--yellow"> 2. Selecteer een tijdslot: </h2> 
+			<div class="block" id="timeselection">
+				<div class="blockselection morning"> 
+					<p id="morning"> </p>
+					<p class="daypart"> Ochtend </p>
+					<p> 9.00 - 13.00 </p>
+				</div>
+				<div class="blockselection afternoon"> 
+					<p id="afternoon"> </p>
+					<p class="daypart"> Middag </p>
+					<p> 13.00 - 17.00 </p>
+				</div>
+				<div class="blockselection wholeday"> 
+					<p id="wholeday"> </p>
+					<p class="daypart"> Hele Dag</p>
+					<p> 9.00 - 17.00 </p>
+				</div>
+			</div> 
+		</div>
+
+		<div>
+			<h2 class="panel--header bg--yellow" style="margin-top: .625rem;"> 3. Selecteer aantal bezoekers: </h2> 
+			<div class="block" id="placeselection">
+				<div class="blockselection one unavailable"> 
+					<p> 1 </p>
+				</div>
+				<div class="blockselection two unavailable"> 
+					<p> 2 </p>
+				</div>
+				<div class="blockselection three unavailable"> 
+					<p> 3 </p>
+				</div>
+				<div class="blockselection four unavailable"> 
+					<p> 4 </p>
+				</div>
+				<div class="blockselection five unavailable"> 
+					<p> 5 </p>
+					<p> (hele ruimte) </p>
+				</div>
+			</div>
+		</div>
+		
+		<div>
+			<h2 class="panel--header bg--green" style="margin-top: .625rem;"> Totalen: </h2> 
+			<div class="block" id="totals">
+				<div class="totals-subblock">
+					<p> Datum Geselecteerd: </p>
+					<p id="selected-date-text"> </p>
+				</div>
+				
+				<hr>
+
+				<div class="totals-subblock">
+					<p> Tijdslot Geselecteerd: </p>
+					<p id="selected-time-text"> </p>
+				</div>
+
+				<hr>
+
+				<div class="totals-subblock">
+					<p> Aantal Plekken: </p>
+					<p id="selected-places-text"> </p>
+				</div>
+
+				<hr>
+
+				<div class="totals-subblock">
+					<p> Totale Prijs: </p>
+					<p id="total-price-text"> </p>
+				</div>
+			</div>
+		</div>
+
+		<a class="payment-button unavailable" target="_blank" href="https://tikkie.me/pay/7dpe4busip70fumpuhef"> 
+			<button>
+					Betalen
+			</button>
+		</a>
+    </section>
+</main>
+
+<footer>
+	<p> Hier komt de footer </p>
+</footer>
+
+</body>
+</html>
