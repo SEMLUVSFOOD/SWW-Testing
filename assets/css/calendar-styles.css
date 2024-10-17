@@ -272,14 +272,24 @@ a {
 	align-items: center;
 }
 
-.blockselection {
+.blockselection{
 	width: 33.333333%;
 	padding: 10px;
 	height: 100%;
 	display: flex;
+	border-radius: none;
+	background: white;
 	flex-direction: column;
 	justify-content: center;
 }
+
+.blockselection:disabled, .seat_select.disabled{
+	opacity: .4;
+	background: white;
+	pointer-events: none;
+}
+
+
 
 /* Add borders between morning, afternoon, and whole day */
 .block p {
@@ -328,26 +338,41 @@ a {
 
 
 /* START OF PLACESELECTION */
-.one,
-.two,
-.three,
-.four {
-	border-right: 1px solid var(--black);
-	display: flex;
-	align-items: center;
-	justify-content: center;
-	cursor: pointer;
-}
-
-.five {
-	cursor: pointer;
-}
-
 #placeselection {
 	height: 5rem;
 	align-items: center;
 }
 
+.seat_select{
+	flex: 1;
+	border-right: 1px solid var(--black);
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	cursor: pointer;
+	padding: 0 10px;
+}
+
+.seat_select p{
+	width: 100%;
+	text-align: center;
+	height: 100%;
+	padding: 10px;
+}
+
+.seat_select:last-of-type{
+	border-right: none;
+}
+
+.seat_select input {
+	display: none;
+}
+
+.seat_select input:checked+p:first-of-type {
+	font-weight: bold;
+	background: var(--grey);
+	border-radius: 5px;
+}
 
 
 /* START OF TOTALS SECTION */

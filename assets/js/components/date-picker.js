@@ -2,12 +2,40 @@ export const calendar = {
 
 	topText: document.getElementById('month-year'),
 	grid: document.getElementById('dates'),
+	jumpToNowButton: document.getElementById('to-now'),
+	prevMonthButton: document.getElementById('prev-month'),
+	nextMonthButton: document.getElementById('next-month'),
+	currentMonthButton: document.getElementById('current-month'),
+
 	currentDate: null,
 	monthNames: ["Januari", "Februari", "Maart", "April", "Mei", "Juni",
 		"Juli", "Augustus", "September", "Oktober", "November", "December"],
 	
-	set( date ){
+	init(){
+		//set event listeners:
+		this.prevMonthButton.addEventListener('click', () => this.changeMonth(-1));
+		this.nextMonthButton.addEventListener('click', () => this.changeMonth(1));
+		this.jumpToNowButton.addEventListener('click', () => {
+			//setup with the current date, rerender
+			this.setup(new Date()).render();
+		});
+
+		return this;
+	},
+
+	setup( date ){
+		//set date:
 		this.currentDate = date;
+		this.setMonths();
+	
+		//return this object
+		return this;
+	},
+
+	changeMonth( offset ){
+		this.currentDate.setMonth( this.currentDate.getMonth() + offset);
+		this.setMonths();
+		this.render();
 		return this;
 	},
 
@@ -86,7 +114,36 @@ export const calendar = {
 			}
 		}
 
+		this.setEvents();
 		//checkMonthLimits(); // Check if we can navigate to the next/previous month
+	},
+
+	//set the day events
+	setEvents(){
+
+		//create events:
+		const buttons = document.querySelectorAll('button.day');
+		const self = this;
+		for( let i = 0; i < buttons.length; i++ ){
+
+			//on a click, trigger a global "dateSelected" event, and pass the correct date
+			buttons[i].addEventListener( 'click', ( evt ) => {
+				
+				//get the date:
+				const date = self.currentDate;
+				date.setDate( evt.target.innerHTML ); //set the current day
+
+				const data = {
+					date: date,
+					value: this.formatDate(date)
+				}
+
+				//push out the custom event
+				const event = new CustomEvent("dateSelected", { detail: data });
+				document.dispatchEvent(event);
+
+			});
+		}
 	},
 
 	getDayOccupation( day, occupationData ){
@@ -107,9 +164,30 @@ export const calendar = {
 			day.classList.add( classes[i] );
 		}
 
-		day.setAttribute('disabled', disabled );
+		if( disabled ){
+			day.setAttribute('disabled', true );
+		}
 		day.innerText = label;
 		return day;
+	},
+
+	setMonths(){
+		// Check if month limits (past/future) are reached
+		let now = new Date();
+		let past = new Date();
+		let future = new Date( now.setMonth( now.getMonth() + 6 ) );
+
+		//reset
+		this.prevMonthButton.removeAttribute('disabled');
+		this.nextMonthButton.removeAttribute('disabled');
+
+		if( past.getMonth() == this.currentDate.getMonth() ){
+			this.prevMonthButton.setAttribute('disabled', true);
+		}
+		if ( future.getMonth() > this.currentDate.getMonth() ){
+			this.nextMonthButton.setAttribute('disabled', true );
+		}
+
 	},
 
 	isToday( day ){
@@ -122,19 +200,26 @@ export const calendar = {
 		return day.getDay() === 0 || day.getDay() === 6;
 	},
 	formatDate( date ){
-		return parseInt( date.getFullYear()+date.getMonth()+date.getDate() );
+		return date.toISOString().split('T')[0];
 	},
 
 	async getOccupationDataMonth( selectedMonth ) {
 		const fileName = `/assets/js/data/occupationData_${selectedMonth}.json`;
-		console.log( fileName );
 		try {
 			const response = await fetch(fileName);
 			if (!response.ok) {
 				throw new Error('Network response was not ok ' + response.statusText);
 			}
 
-			return await response.json();
+			const data = await response.json();
+
+			//push out an event
+			const event = new CustomEvent("occupationDataLoaded", { detail: data });
+			document.dispatchEvent( event );
+
+			//return the data
+			return data;
+
 		} catch (error) {
 			console.error('Failed to fetch data:', error);
 			return null;

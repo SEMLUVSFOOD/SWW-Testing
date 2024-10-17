@@ -21,17 +21,17 @@
 					<span id="month-year"></span>
 					<button id="next-month">&gt;</button>
 				</nav>
-				<button onclick="goToCurrentMonth()">Vandaag</button>
+				<button id="to-now">Vandaag</button>
 			</header>
 			<section class="calendar-grid">
 				<ul class="dates-grid days-grid">
-					<li>Sun</li>
-					<li>Mon</li>
-					<li>Tue</li>
-					<li>Wed</li>
-					<li>Thu</li>
-					<li>Fri</li>
-					<li>Sat</li>
+					<li>Zo</li>
+					<li>Ma</li>
+					<li>Di</li>
+					<li>Wo</li>
+					<li>Do</li>
+					<li>Vrij</li>
+					<li>Za</li>
 				</ul>
 				<section id="dates" class="dates-grid"></section>
 			</section>
@@ -56,43 +56,48 @@
 		<div>
 			<h2 class="panel--header bg--yellow"> 2. Selecteer een tijdslot: </h2> 
 			<div class="block" id="timeselection">
-				<div class="blockselection morning"> 
-					<p id="morning"> </p>
+				<button class="blockselection daytime" data-type="morning"> 
+					<p class="availability"> </p>
 					<p class="daypart"> Ochtend </p>
 					<p> 9.00 - 13.00 </p>
-				</div>
-				<div class="blockselection afternoon"> 
-					<p id="afternoon"> </p>
+				</button>
+				<button class="blockselection daytime" data-type="afternoon"> 
+					<p class="availability"> </p>
 					<p class="daypart"> Middag </p>
 					<p> 13.00 - 17.00 </p>
-				</div>
-				<div class="blockselection wholeday"> 
-					<p id="wholeday"> </p>
+				</button>
+				<button class="blockselection daytime" data-type="wholeday"> 
+					<p class="availability"> </p>
 					<p class="daypart"> Hele Dag</p>
 					<p> 9.00 - 17.00 </p>
-				</div>
+				</button>
 			</div> 
 		</div>
 
 		<div>
 			<h2 class="panel--header bg--yellow" style="margin-top: .625rem;"> 3. Selecteer aantal bezoekers: </h2> 
 			<div class="block" id="placeselection">
-				<div class="blockselection one unavailable"> 
+				<label class="seat_select"> 
+					<input type="radio" value="1" name="seat_value">
 					<p> 1 </p>
-				</div>
-				<div class="blockselection two unavailable"> 
+				</label>
+				<label class="seat_select"> 
+					<input type="radio" value="2" name="seat_value">
 					<p> 2 </p>
-				</div>
-				<div class="blockselection three unavailable"> 
+				</label>
+				<label class="seat_select"> 
+					<input type="radio" value="3" name="seat_value">
 					<p> 3 </p>
-				</div>
-				<div class="blockselection four unavailable"> 
+				</label>
+				<label class="seat_select"> 
+					<input type="radio" value="4" name="seat_value">
 					<p> 4 </p>
-				</div>
-				<div class="blockselection five unavailable"> 
+				</label>
+				<label class="seat_select"> 
+					<input type="radio" value="5" name="seat_value">
 					<p> 5 </p>
 					<p> (hele ruimte) </p>
-				</div>
+				</label>
 			</div>
 		</div>
 		
@@ -132,6 +137,10 @@
 					Betalen
 			</button>
 		</a>
+
+		<!-- Fields with the actual values we want to save -->
+		<input type="text" id="date_value">
+		<input type="text" id="time_value">
     </section>
 </main>
 
