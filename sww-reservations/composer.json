@@ -1,0 +1,11 @@
+{
+	"autoload": {
+		"psr-4": {
+			"TanteNetty\\SwwReservations\\": "src/"
+		},
+		"files": [
+		]
+	},
+    "require": {
+    }
+}
