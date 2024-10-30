@@ -6,6 +6,7 @@
     <title>Interactive Calendar</title>
     <link rel="stylesheet" href="/assets/css/calendar-styles.css">
     <script defer src="/assets/js/calendar.js" type="module"></script>
+	<link rel="icon" href="../assets/ico/SRS.ico" type="image/x-icon">
 </head>
 <body>
 	<a class="backbutton" href="../index.html">
@@ -106,28 +107,28 @@
 			<div class="block" id="totals">
 				<div class="totals-subblock">
 					<p> Datum Geselecteerd: </p>
-					<p id="selected-date-text"> </p>
+					<p id="selected-date-text"> x </p>
 				</div>
 				
 				<hr>
 
 				<div class="totals-subblock">
 					<p> Tijdslot Geselecteerd: </p>
-					<p id="selected-time-text"> </p>
+					<p id="selected-time-text"> x <br> <br> </p>
 				</div>
 
 				<hr>
 
 				<div class="totals-subblock">
 					<p> Aantal Plekken: </p>
-					<p id="selected-places-text"> </p>
+					<p id="selected-places-text"> x </p>
 				</div>
 
 				<hr>
 
 				<div class="totals-subblock">
 					<p> Totale Prijs: </p>
-					<p id="total-price-text"> </p>
+					<p id="total-price-text"> x </p>
 				</div>
 			</div>
 		</div>
@@ -137,14 +138,15 @@
 					Betalen
 			</button>
 		</a>
-
-		<!-- Fields with the actual values we want to save -->
-		<input type="text" id="date_value">
-		<input type="text" id="time_value">
     </section>
 </main>
 
 <footer>
+		<!-- Fields with the actual values we want to save -->
+		<input type="text" id="date_value">
+		<input type="text" id="time_value">
+		<input type="text" id="seat_value">
+			
 	<p> Hier komt de footer </p>
 </footer>
 

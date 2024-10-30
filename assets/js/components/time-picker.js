@@ -54,7 +54,7 @@ export const timePicker = {
 
 	setTime( evt ){
 		const type = evt.currentTarget.dataset.type;
-
+				
 		//push out the custom event
 		const event = new CustomEvent("timeSelected", { detail: type });
 		document.dispatchEvent(event);

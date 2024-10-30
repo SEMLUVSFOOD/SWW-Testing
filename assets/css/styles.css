@@ -1,6 +1,6 @@
 @font-face {
     font-family: 'Titling Gothic FB Narrow Medium';  /* Your custom font name */
-    src: url('./Titling\ Gothic\ FB\ Narrow\ Medium.otf') format('opentype');  /* Path to your .otf file */
+	src: url('../fonts/Titling\ Gothic\ FB\ Narrow\ Standard.otf') format('opentype');
     font-weight: normal;  /* You can set to normal, bold, etc. */
     font-style: normal;   /* You can set to normal, italic, etc. */
   }
