@@ -27,7 +27,7 @@ export const calendar = {
 		//set date:
 		this.currentDate = date;
 		this.setMonths();
-	
+			
 		//return this object
 		return this;
 	},
@@ -36,7 +36,7 @@ export const calendar = {
 		this.currentDate.setMonth(this.currentDate.getMonth() + offset);
 		this.setMonths();
 		this.render();
-
+	
 		return this;
 	},
 
@@ -44,14 +44,14 @@ export const calendar = {
 
 		const year = this.currentDate.getFullYear();
 		const month = this.currentDate.getMonth();
-
+		
 		//set all relavant variables:
 		const firstDay = new Date(year, month, 1);
 		const lastDay = new Date(year, month + 1, 0);
 		const firstDayIndex = firstDay.getDay();
 		const lastDate = lastDay.getDate();
 		const prevLastDay = new Date(year, month, 0).getDate();
-
+		
 		// Get the occupation array for the current month
 		const occupationData = await this.getOccupationDataMonth( month + 1 );
 
@@ -77,7 +77,7 @@ export const calendar = {
 			let disabled = false;
 
 			const currentDay = new Date(year, month, day);
-
+			
 			if( this.isWeekend( currentDay ) || this.isPast( currentDay ) ) {
 				classes.push('bg--grey');
 				classes.push('day--past');
@@ -96,7 +96,7 @@ export const calendar = {
 				} else {
 					classes.push('bg--green');
 				}
-
+								
 				if( this.isToday( currentDay ) ){
 					classes.push('selected');
 				}

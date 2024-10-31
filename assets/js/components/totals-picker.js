@@ -56,9 +56,7 @@ export const totalsPicker = {
 		const pricePerPersonPerSlot = 7.5
 		var totalPrice = pricePerPersonPerSlot * howManyTimeSlots * seats;
 		totalPrice = totalPrice.toFixed(2); // Round off to 2 decimal places
-        console.log(totalPrice);
 
-        this.totalPriceText.innerHTML = "€" + totalPrice;
-
+		this.totalPriceText.innerHTML = "€" + totalPrice;
     }
 }
