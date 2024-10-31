@@ -33,9 +33,10 @@ export const calendar = {
 	},
 
 	changeMonth( offset ){
-		this.currentDate.setMonth( this.currentDate.getMonth() + offset);
+		this.currentDate.setMonth(this.currentDate.getMonth() + offset);
 		this.setMonths();
 		this.render();
+
 		return this;
 	},
 
@@ -175,7 +176,9 @@ export const calendar = {
 		// Check if month limits (past/future) are reached
 		let now = new Date();
 		let past = new Date();
-		let future = new Date( now.setMonth( now.getMonth() + 6 ) );
+		let future = new Date();
+		
+		future.setMonth(now.getMonth() + 6);
 
 		//reset
 		this.prevMonthButton.removeAttribute('disabled');
@@ -184,7 +187,7 @@ export const calendar = {
 		if( past.getMonth() == this.currentDate.getMonth() ){
 			this.prevMonthButton.setAttribute('disabled', true);
 		}
-		if ( future.getMonth() > this.currentDate.getMonth() ){
+		if ( future.getMonth() ==  this.currentDate.getMonth() ){
 			this.nextMonthButton.setAttribute('disabled', true );
 		}
 
