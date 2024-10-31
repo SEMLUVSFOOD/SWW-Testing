@@ -16,19 +16,20 @@ document.addEventListener('DOMContentLoaded', () => {
 		seatPicker.setOccupation( event.detail );
 	});
 
-	//set the time and seat pickers on date select.
-	document.addEventListener( 'dateSelected', ( event ) => {
-		timePicker.setDate( event.detail.date ).render();
-		seatPicker.setDate( event.detail.date )
-		
-		//Update the selected Date in Totals
+	document.addEventListener('dateSelected', (event) => {
+		timePicker.setDate(event.detail.date).render();
+		seatPicker.setDate(event.detail.date);
+
+		// Update the selected Date in Totals
 		var dateValue = event.detail.value;
 		totalsPicker.setDateSelected(dateValue);
-	})
+	});
+	
 
 	//on time selected, pass it along to the seat picker
 	document.addEventListener( 'timeSelected', ( event ) => {
 		seatPicker.setTime(event.detail).render();
+
 
 		// Call setTotals with the dateValue
 		const timeSelectedValue = event.detail;

@@ -96,10 +96,6 @@ export const calendar = {
 				} else {
 					classes.push('bg--green');
 				}
-								
-				if( this.isToday( currentDay ) ){
-					classes.push('selected');
-				}
 			}
 
 			const btn = this.renderDay(day, classes, disabled);
@@ -119,33 +115,41 @@ export const calendar = {
 		//checkMonthLimits(); // Check if we can navigate to the next/previous month
 	},
 
-	//set the day events
-	setEvents(){
-
-		//create events:
+	// Set the day events
+	setEvents() {
+		// Create events:
 		const buttons = document.querySelectorAll('button.day');
 		const self = this;
-		for( let i = 0; i < buttons.length; i++ ){
-
-			//on a click, trigger a global "dateSelected" event, and pass the correct date
-			buttons[i].addEventListener( 'click', ( evt ) => {
+		for (let i = 0; i < buttons.length; i++) {
+			// On a click, trigger a global "dateSelected" event, and pass the correct date
+			buttons[i].addEventListener('click', (evt) => {
+				// Remove 'selected' class from all buttons
+				buttons.forEach(button => button.classList.remove('selected'));
 				
-				//get the date:
-				const date = self.currentDate;
-				date.setDate( evt.target.innerHTML ); //set the current day
+				// Add 'selected' class to the clicked button
+				evt.target.classList.add('selected');
 
+				// Get the date:
+				const date = self.currentDate;
+				date.setDate(evt.target.innerHTML); // Set the current day
+
+				// Create the modified clicked HTML with the selected class
+				const clickedHtmlWithClass = evt.target.outerHTML.replace('>', ' selected>', 1);
+
+				// Create the event detail object
 				const data = {
 					date: date,
-					value: this.formatDate(date)
-				}
+					value: this.formatDate(date),
+					clickedHtml: clickedHtmlWithClass // Add the modified clicked button's HTML here
+				};
 
-				//push out the custom event
+				// Push out the custom event
 				const event = new CustomEvent("dateSelected", { detail: data });
 				document.dispatchEvent(event);
-
 			});
 		}
 	},
+
 
 	getDayOccupation( day, occupationData ){
 		// Get the occupation data for the current day and calculate the sum
@@ -193,9 +197,6 @@ export const calendar = {
 
 	},
 
-	isToday( day ){
-		return ( this.formatDate( day ) == this.formatDate( new Date() ) )
-	},
 	isPast( day ){
 		return this.formatDate(day) < this.formatDate(new Date());
 	},
