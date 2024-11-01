@@ -33,13 +33,9 @@ export const calendar = {
 	},
 
 	changeMonth( offset ){
+		this.currentDate.setDate(1); // Sets to the last day of the previous month
+
 		this.currentDate.setMonth(this.currentDate.getMonth() + offset);
-		
-		// If the month change causes an overflow (e.g., from October 31 to December 1),
-		// adjust back to the last day of the new month.
-		if (this.currentDate.getDate() === 1 && offset > 0) {
-			this.currentDate.setDate(0); // Sets to the last day of the previous month
-		}
 
 		this.setMonths();
 		this.render();

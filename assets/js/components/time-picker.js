@@ -49,7 +49,6 @@ export const timePicker = {
 
 			slot.element.querySelector('.availability').innerHTML = availability;
 		});
-
 	},
 
 	setTime(evt) {
