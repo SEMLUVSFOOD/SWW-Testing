@@ -52,14 +52,27 @@ export const timePicker = {
 
 	},
 
-	setTime( evt ){
+	setTime(evt) {
 		const type = evt.currentTarget.dataset.type;
-				
-		//push out the custom event
+		
+		// Remove any of the 'pressed' classes from all elements
+		document.querySelectorAll('.blockselection').forEach(element => {
+			element.classList.remove('pressedleft', 'pressedmiddle', 'pressedright');
+		});
+		
+		// Add the specific 'pressed' class based on the type
+		if (type === "morning") {
+			evt.currentTarget.classList.add('pressedleft');
+		} else if (type === "afternoon") {
+			evt.currentTarget.classList.add('pressedmiddle');
+		} else if (type === "wholeday") {
+			evt.currentTarget.classList.add('pressedright');
+		}
+		
+		// Dispatch the custom event with the selected time type
 		const event = new CustomEvent("timeSelected", { detail: type });
 		document.dispatchEvent(event);
 	},
-
 
 	setDate( date ){
 		this.currentDate = date;

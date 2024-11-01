@@ -120,10 +120,14 @@ button {
 	background-color: var(--pink);
 	color: rgb(0, 0, 0);
 	border: none;
+	border-radius: 6px;
 	padding: 15px;
-	border-radius: 5px;
 	font-size: 16px;
 	cursor: pointer;
+}
+
+button.blockselection {
+	border-radius: 0px !important;
 }
 
 button:disabled {
@@ -188,7 +192,6 @@ button:disabled {
 .dates-grid .selected {
 	border: 2px solid var(--black);
 }
-
 
 /* Colour the legenda */
 
@@ -277,10 +280,11 @@ a {
 	padding: 10px;
 	height: 100%;
 	display: flex;
-	border-radius: none;
 	background: white;
 	flex-direction: column;
 	justify-content: center;
+	border: 1px solid var(--grey);
+	align-items: center;
 }
 
 .blockselection:disabled, .seat_select.disabled{
@@ -321,17 +325,17 @@ a {
 	cursor: pointer;
 }
 
-#pressedleft {
+.pressedleft {
 	border: 2px solid var(--black);
 	border-radius: 0px 0px 0px 6px;
 }
 
-#pressedmiddle {
+.pressedmiddle {
 	border: 2px solid var(--black);
 	border-radius: 0px;
 }
 
-#pressedright {
+.pressedright {
 	border: 2px solid var(--black);
 	border-radius: 0px 0px 6px 0px;
 }
